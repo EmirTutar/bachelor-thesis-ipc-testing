@@ -1,0 +1,75 @@
+stages:
+  - compile_pdf
+
+compile_documentation_pdf:
+  stage: compile_pdf
+  image: fbe-dockerreg.rwu.de/adm-iki/systems/gitlab-runner-docker-latex:master
+  tags:
+    - latex
+  script:
+    - cd doc/documentation/ && latexmk -pdf Doku.tex
+  only:
+    changes:
+      - doc/documentation/*
+  artifacts:
+    name: "Proposal"
+    expire_in: 4 weeks
+    when: on_success
+    name: "Documentation.pdf"
+    paths:
+      - doc/documentation/build/Doku.pdf
+
+compile_presentation_pdf:
+  stage: compile_pdf
+  image: fbe-dockerreg.rwu.de/adm-iki/systems/gitlab-runner-docker-latex:master
+  tags:
+    - latex
+  script:
+    - cd doc/presentation/Zwischenpraesentation1 && latexmk -pdf Presentation.tex
+  only:
+    changes:
+      - doc/presentation/Zwischenpraesentation1/*
+  artifacts:
+    name: "Proposal_Presentation"
+    expire_in: 4 weeks
+    when: on_success
+    name: "Presentation.pdf"
+    paths:
+      - doc/presentation/Zwischenpraesentation1/build/Presentation.pdf
+
+compile_presentation_pdf_2:
+  stage: compile_pdf
+  image: fbe-dockerreg.rwu.de/adm-iki/systems/gitlab-runner-docker-latex:master
+  tags:
+    - latex
+  script:
+    - cd doc/presentation/Zwischenpraesentation2 && latexmk -pdf Presentation.tex
+  only:
+    changes:
+      - doc/presentation/Zwischenpraesentation2/*
+  artifacts:
+    name: "Proposal_Presentation"
+    expire_in: 4 weeks
+    when: on_success
+    name: "Presentation.pdf"
+    paths:
+      - doc/presentation/Zwischenpraesentation2/build/Presentation.pdf
+
+compile_final_presentation:
+  stage: compile_pdf
+  image: fbe-dockerreg.rwu.de/adm-iki/systems/gitlab-runner-docker-latex:master
+  tags:
+    - latex
+  script:
+    - cd doc/presentation/Endpräsentation && latexmk -pdf Presentation.tex
+  only:
+    changes:
+      - doc/presentation/Endpräsentation/*
+  artifacts:
+    name: "Proposal_Presentation"
+    expire_in: 4 weeks
+    when: on_success
+    name: "Presentation.pdf"
+    paths:
+      - doc/presentation/Endpräsentation/build/Presentation.pdf
+
