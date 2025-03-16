@@ -21,14 +21,6 @@ jobs:
         with:
           root_file: Doku.tex
           working_directory: Documentation
-          compiler: latexmk
-          args: >
-            -pdf
-            -pdflatex="pdflatex %O %S"
-            -bibtex="biber %O %B"
-            -output-directory=build
-            -interaction=nonstopmode
-            -shell-escape
 
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
