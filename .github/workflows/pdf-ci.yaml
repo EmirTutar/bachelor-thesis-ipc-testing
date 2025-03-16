@@ -24,12 +24,11 @@ jobs:
           compiler: latexmk
           args: >
             -pdf
+            -pdflatex="pdflatex %O %S"
+            -bibtex="biber %O %B"
             -output-directory=build
             -interaction=nonstopmode
             -shell-escape
-            -bibtex
-            -pdflatex="pdflatex %O %S"
-            -bibtex="biber %O %B"
 
       - name: Upload PDF file
         uses: actions/upload-artifact@v4
