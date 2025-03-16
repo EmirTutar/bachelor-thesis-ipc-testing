@@ -1,0 +1,119 @@
+\documentclass[a4paper,11pt,singlespacing]{article}
+% \usepackage[left=2.5cm,right=2.5cm,top=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[hidelinks]{hyperref}
+\usepackage[style=ieee, sorting=none]{biblatex}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{float}
+\usepackage{listings,xcolor}
+\usepackage{caption}
+\usepackage[acronym]{glossaries}
+\makeglossaries
+\addbibresource{sample.bib}
+
+%opening
+\title{Project title}
+\author{
+	Name Mat.No.
+	}
+
+\begin{document}
+% Absatzeinrückung verhindern
+\setlength{\parindent}{0ex}
+
+\begin{titlepage}
+	
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+	
+	\center % Center everything on the page
+	
+	%----------------------------------------------------------------------------------------
+	%	HEADING SECTIONS
+	%----------------------------------------------------------------------------------------
+	
+	\textsc{\LARGE University of Applied Sciences Ravensburg Weingarten}\\[1.5cm] % Name of your university/college
+	\textsc{\Large Department of
+		Electrical Engineering
+		and Computer Science}\\[0.5cm] % Major heading such as course name
+	\textsc{\large  \textbf{Bachelor Thesis}}\\[0.5cm] % Minor heading such as course title
+	
+	%----------------------------------------------------------------------------------------
+	%	TITLE SECTION
+	%----------------------------------------------------------------------------------------
+	
+	\HRule \\[0.4cm]
+	{ \huge \bfseries Testing Framework for Inter-Process
+		Communication (IPC) Systems}\\[0.4cm] % Title of your document
+	\HRule \\[1.5cm]
+	
+	%----------------------------------------------------------------------------------------
+	%	AUTHOR SECTION
+	%----------------------------------------------------------------------------------------
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\emph{Author:}\\
+            Emircan \textsc{Tutar}\\ % Your name
+			Mat.No. 35606 \\
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushleft} \large
+			\emph{1.Supervisor:} \\
+			Prof. Dr. Marius \textsc{Hofmeister} \\ % Supervisor's Name
+			\emph{2.Supervisor:} \\
+			M.Sc. Kerstin \textsc{Keller} % Supervisor's Name
+		\end{flushleft}
+	\end{minipage}\\[2cm]
+	
+	% If you don't want a supervisor, uncomment the two lines below and remove the section above
+	%\Large \emph{Author:}\\
+	%John \textsc{Smith}\\[3cm] % Your name
+	
+	%----------------------------------------------------------------------------------------
+	%	DATE SECTION
+	%----------------------------------------------------------------------------------------
+	
+	{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+	
+	%----------------------------------------------------------------------------------------
+	%	LOGO SECTION
+	%----------------------------------------------------------------------------------------
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\includegraphics[width=3.5cm]{images/conti_logo.png} % Include a department/university logo - this will require the graphicx package
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushright} \large
+			\includegraphics[width=7cm]{images/logo.png} % Include a department/university logo - this will require the graphicx package
+		\end{flushright}
+	\end{minipage}\\[2cm]
+
+	%----------------------------------------------------------------------------------------
+	
+	\vfill % Fill the rest of the page with whitespace
+	
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
+
+\input{chapter/introduction}
+\input{chapter/abbreviations}
+\input{chapter/specification}
+\input{chapter/evaluation.tex}
+\input{chapter/summary.tex}
+\printbibliography[heading=bibintoc]
+
+\end{document}
+
+
