@@ -17,7 +17,8 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: Documentation/Doku.tex
+          root_file: Doku.tex
+          working_directory: Documentation   # <-- Hier ist die wichtige Änderung!
 
       - name: Rename PDF
         run: mv Documentation/Doku.pdf Bachelor_thesis.pdf
