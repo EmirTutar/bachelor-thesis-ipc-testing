@@ -44,7 +44,9 @@ This thesis addresses this gap by:
 ```
 
 ## Automated Builds
-The bachelor thesis (PDF) is automatically compiled after each push using GitHub Actions. The compiled PDF can be downloaded from "Actions → Artifacts."
+The bachelor thesis (PDF) is automatically compiled after each push using GitHub Actions.  
+You can download the latest compiled PDF from **[GitHub Actions → Artifacts](https://github.com/EmirTutar/BA_Ecal_Test_Framework/actions?query=workflow%3A"Build+PDF")**.  
+📌 **Note:** The downloaded file is a `.zip` archive. Extract it to access the `Bachelor_thesis.pdf`.
 
 ## License
 This work and its contents are intended only for academic purposes.
