@@ -32,7 +32,7 @@ jobs:
 
       - name: Commit and push PDF to Documentation folder
         env:
-          GITHUB_TOKEN: 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
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
