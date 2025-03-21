@@ -1,5 +1,10 @@
 # Bachelor Thesis: Development and Evaluation of a System Testing Framework for eCAL-Based Inter-Process Communication
 
+## Get the PDF - Version
+
+You can Download the official latest release of the BACHELOR THESIS here: 
+📥 [Download Bachelor_thesis.pdf](https://github.com/EmirTutar/BA_Ecal_Test_Framework/releases/latest/download/Bachelor_thesis.pdf)
+
 ## Author
 **Emircan Tutar**  
  
