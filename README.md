@@ -1,4 +1,4 @@
 # Bachelor Thesis
 
 
-© 2024 Emircan Tutar. Alle Rechte vorbehalten.
+© 2025 Emircan Tutar. All rights reserved.
