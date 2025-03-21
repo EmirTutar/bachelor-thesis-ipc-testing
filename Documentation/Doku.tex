@@ -28,6 +28,24 @@
 
 \begin{titlepage}
 	
+		%----------------------------------------------------------------------------------------
+	%	LOGO SECTION
+	%----------------------------------------------------------------------------------------
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\includegraphics[width=3.5cm]{./Images/conti_logo.png} % Include a department/university logo - this will require the graphicx package
+		\end{flushleft}
+	\end{minipage}
+	~
+	\begin{minipage}{0.5\textwidth}
+		\begin{flushright} \large
+			\includegraphics[width=7cm]{./Images/logo.png} % Include a department/university logo - this will require the graphicx package
+		\end{flushright}
+	\end{minipage}\\[2cm]
+	
+	%----------------------------------------------------------------------------------------
+	
 	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
 	
 	\center % Center everything on the page
@@ -47,30 +65,32 @@
 	%----------------------------------------------------------------------------------------
 	
 	\HRule \\[0.4cm]
-	{ \huge \bfseries Testing Framework for Inter-Process
-		Communication (IPC) Systems}\\[0.4cm] % Title of your document
+	{ \huge \bfseries Development and Evaluation of a System Testing Framework for eCAL-Based Inter-Process-Communication}\\[0.4cm] % Title of your document
 	\HRule \\[1.5cm]
 	
 	%----------------------------------------------------------------------------------------
 	%	AUTHOR SECTION
 	%----------------------------------------------------------------------------------------
 	
-	\begin{minipage}{0.4\textwidth}
+	\begin{minipage}{0.5\textwidth}
 		\begin{flushleft} \large
-			\emph{Author:}\\
-            Emircan \textsc{Tutar}\\ % Your name
-			Mat.No. 35606 \\
+			\textbf{Author:} Emircan \textsc{Tutar}\\ % Your name
+				\textbf{Address:} Heyderstr. 7\\
+				\textbf{City:} 88131 Lindau\\
+				\textbf{Student ID:} 35606\\
+				\textbf{Program:} Applied Computer Science
+		
 		\end{flushleft}
 	\end{minipage}
 	~
-	\begin{minipage}{0.5\textwidth}
+	\begin{minipage}{0.45\textwidth}
 		\begin{flushleft} \large
-			\emph{1.Supervisor:} \\
+			\textbf{1.Supervisor:} \\
 			Prof. Dr. Marius \textsc{Hofmeister} \\ % Supervisor's Name
-			\emph{2.Supervisor:} \\
+			\textbf{2.Supervisor:} \\
 			M.Sc. Kerstin \textsc{Keller} % Supervisor's Name
 		\end{flushleft}
-	\end{minipage}\\[2cm]
+	\end{minipage}\\[1cm]
 	
 	% If you don't want a supervisor, uncomment the two lines below and remove the section above
 	%\Large \emph{Author:}\\
@@ -80,25 +100,7 @@
 	%	DATE SECTION
 	%----------------------------------------------------------------------------------------
 	
-	{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
-	
-	%----------------------------------------------------------------------------------------
-	%	LOGO SECTION
-	%----------------------------------------------------------------------------------------
-	
-	\begin{minipage}{0.4\textwidth}
-		\begin{flushleft} \large
-			\includegraphics[width=3.5cm]{images/conti_logo.png} % Include a department/university logo - this will require the graphicx package
-		\end{flushleft}
-	\end{minipage}
-	~
-	\begin{minipage}{0.5\textwidth}
-		\begin{flushright} \large
-			\includegraphics[width=7cm]{images/logo.png} % Include a department/university logo - this will require the graphicx package
-		\end{flushright}
-	\end{minipage}\\[2cm]
-
-	%----------------------------------------------------------------------------------------
+	{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
 	
 	\vfill % Fill the rest of the page with whitespace
 	
@@ -107,11 +109,11 @@
 \tableofcontents
 \pagebreak
 
-\input{chapter/introduction}
-\input{chapter/abbreviations}
-\input{chapter/specification}
-\input{chapter/evaluation.tex}
-\input{chapter/summary.tex}
+\input{Chapter/introduction}
+\input{Chapter/abbreviations}
+\input{Chapter/specification}
+\input{Chapter/evaluation.tex}
+\input{Chapter/summary.tex}
 \printbibliography[heading=bibintoc]
 
 \end{document}
