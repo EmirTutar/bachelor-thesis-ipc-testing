@@ -18,10 +18,10 @@ jobs:
         uses: xu-cheng/latex-action@v3
         with:
           root_file: Doku.tex
-          working_directory: Documentation   # <-- Hier ist die wichtige Änderung!
+          working_directory: Documentation
 
       - name: Rename PDF
-        run: mv Documentation/Doku.pdf Bachelor_thesis.pdf
+        run: mv -f Documentation/Doku.pdf Bachelor_thesis.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
