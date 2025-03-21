@@ -28,16 +28,3 @@ jobs:
         with:
           name: Bachelor_thesis
           path: Bachelor_thesis.pdf
-          if-no-files-found: error
-          retention-days: 80
-
-      - name: Commit and push PDF to Documentation folder
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          mv -f Bachelor_thesis.pdf Documentation/Bachelor_thesis.pdf
-          git add Documentation/Bachelor_thesis.pdf
-          git commit -m "Update generated PDF" || echo "No changes to commit"
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git HEAD:dev
