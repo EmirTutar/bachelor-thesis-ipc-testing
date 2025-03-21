@@ -1,19 +1,14 @@
 # Bachelor Thesis: Development and Evaluation of a System Testing Framework for eCAL-Based Inter-Process Communication
 
 ## Get the PDF - Version
-
-You can Download the official latest release of the BACHELOR THESIS here: 
-📥 [Download Bachelor_thesis.pdf](https://github.com/EmirTutar/BA_Ecal_Test_Framework/releases/latest/download/Bachelor_thesis.pdf)
+Latest Version of the Bachelor Thesis:
+-->📥 Download [Bachelor_thesis.pdf](https://github.com/EmirTutar/BA_Ecal_Test_Framework/releases/latest/download/Bachelor_thesis.pdf)
 
 ## Author
 **Emircan Tutar**  
  
 Ravensburg-Weingarten University of Applied Sciences
 Study Program: Applied Computer Science 
-
-## Supervisors
-- **First Supervisor:** Prof. Dr. Marius Hofmeister
-- **Second Supervisor:** M.Sc. Kerstin Keller
 
 ## Overview
 This bachelor's thesis deals with developing and evaluating a system testing framework for Inter-Process Communication (IPC) based on eCAL (enhanced Communication Abstraction Layer). The aim is to create a standardized and reliable method to test distributed applications, ensuring stable communication, robustness, and performance in realistic scenarios.
@@ -35,17 +30,17 @@ This thesis addresses this gap by:
 
 ## Repository Structure
 ```
-.
-├── Documentation
-│   ├── Doku.tex (LaTeX file of the thesis)
-│   ├── Bachelor_thesis.pdf (Automatically generated PDF)
-│   └── Images
-│       └── (Image files)
-│   └── Chapters
-│       └── (.tex files)
-├── Source
-│   └── (Code)
-└── README.md
+BA_Ecal_Test_Framework
+ ├── Documentation
+ │   ├── Doku.tex (LaTeX file of the thesis)
+ │   ├── Bachelor_thesis.pdf (Automatically generated PDF)
+ │   └── Images
+ │       └── (.png files)
+ │   └── Chapters
+ │       └── (.tex files)
+ ├── Source
+ │   └── (Code files)
+ └── README.md
 ```
 
 ## Automated Builds
