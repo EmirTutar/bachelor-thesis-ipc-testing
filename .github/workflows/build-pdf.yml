@@ -21,22 +21,23 @@ jobs:
           working_directory: Documentation
 
       - name: Rename PDF
-        run: mv Documentation/Doku.pdf Bachelor_thesis.pdf
+        run: mv -f Documentation/Doku.pdf Bachelor_thesis.pdf
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Bachelor_thesis.pdf
+          name: Bachelor_thesis
           path: Bachelor_thesis.pdf
           if-no-files-found: error
+          retention-days: 80
 
       - name: Commit and push PDF to Documentation folder
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          mv Bachelor_thesis.pdf Documentation/Bachelor_thesis.pdf
+          mv -f Bachelor_thesis.pdf Documentation/Bachelor_thesis.pdf
           git add Documentation/Bachelor_thesis.pdf
-          git commit -m "Update generated PDF"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
+          git commit -m "Update generated PDF" || echo "No changes to commit"
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git HEAD:dev
