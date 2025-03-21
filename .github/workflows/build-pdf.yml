@@ -1,0 +1,30 @@
+name: Build PDF
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: Doku.tex
+          working_directory: Documentation   # <-- Hier ist die wichtige Änderung!
+
+      - name: Rename PDF
+        run: mv Documentation/Doku.pdf Bachelor_thesis.pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bachelor_thesis
+          path: Bachelor_thesis.pdf
