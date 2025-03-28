@@ -1,24 +1,78 @@
-@misc{ipc_etas,
-	author = {{ETAS GmbH}},
-	title = {{Inter-Process Communication (IPC)}},
-	howpublished = {\url{https://edms.etas.com/explanations/ipc.html}},
-	note = {Accessed: 2025-03-25}
-}
-
 @misc{ecal_github,
-	author = {{Eclipse Foundation}},
-	title = {{eCAL - enhanced Communication Abstraction Layer}},
-	howpublished = {\url{https://github.com/eclipse-ecal/ecal}},
-	note = {Accessed: 2025-03-25}
+	author       = {Eclipse Foundation},
+	title        = {eCAL - Enhanced Communication Abstraction Layer},
+	url			 = {\url{https://github.com/eclipse-ecal/ecal}},
+	note         = {Accessed: 2025-03-01}
 }
 
-@book{middleware_challenges,
+@misc{ecal_official_docs,
+	author       = {Eclipse Foundation},
+	title        = {eCAL Documentation},
+	url			 = {\url{https://eclipse-ecal.github.io/ecal/stable/index.html}},
+	note         = {Accessed: 2025-03-03}
+}
+
+@misc{ecal_ros_docs,
+	author       = {ROS Documentation},
+	title        = {eCAL — eCAL 6.0.0 Documentation},
+	url			 = {\url{https://docs.ros.org/en/humble/p/ecal/}},
+	note         = {Accessed: 2025-03-03}
+}
+
+@misc{ros2_launch_testing,
+	author = {Open Robotics},
+	title  = {Writing Basic Integration Tests with launch\_testing},
+	year   = {2025},
+	url    = {https://docs.ros.org/en/rolling/Tutorials/Intermediate/Testing/Integration.html},
+	note   = {Accessed: 2025-03-03}
+}
+
+@misc{eprosima_fast_dds,
+	author = {eProsima},
+	title  = {eProsima Fast DDS},
+	year   = {2025},
+	url    = {https://github.com/eProsima/Fast-DDS},
+	note   = {Accessed: 2025-03-10}
+}
+
+@misc{rti_connext_dds,
+	author = {RTI},
+	title  = {Comparing Open Source DDS to RTI Connext DDS},
+	year   = {2025},
+	url    = {https://www.rti.com/blog/picking-the-right-dds-solution},
+    note   = {Accessed: 2025-03-11}
+}
+
+@book{tanenbaum2017,
+	author    = {A. S. Tanenbaum and M. van Steen},
+	title     = {Distributed Systems: Principles and Paradigms},
+	edition   = {3rd},
+	publisher = {Pearson Education},
+	year      = {2017}
+}
+
+@book{coulouris2012,
 	author    = {G. Coulouris and J. Dollimore and T. Kindberg and G. Blair},
 	title     = {Distributed Systems: Concepts and Design},
 	edition   = {5th},
 	publisher = {Addison-Wesley},
-	year      = {2011},
-	pages     = {643--645}
+	year      = {2012}
+}
+
+@book{stallings2018,
+	author    = {W. Stallings},
+	title     = {Operating Systems: Internals and Design Principles},
+	edition   = {9th},
+	publisher = {Pearson Education},
+	year      = {2018}
+}
+
+@book{tanenbaum2015,
+	author    = {A. S. Tanenbaum and H. Bos},
+	title     = {Modern Operating Systems},
+	edition   = {4th},
+	publisher = {Pearson Education},
+	year      = {2015}
 }
 
 @article{ipc_performance_analysis,
@@ -27,8 +81,117 @@
 	journal = {International Journal of Modern Education and Computer Science},
 	volume  = {12},
 	number  = {2},
-	pages   = {36--52},
-	month   = {Apr.},
 	year    = {2020}
 }
 
+@inproceedings{raiciu2017,
+	author    = {C. Raiciu and F. Huici and M. Handley and D. S. Rosenblum},
+	title     = {Enabling Efficient Zero-Copy Data Exchange in Networked Systems},
+	booktitle = {Proceedings of the ACM SIGCOMM Workshop on Kernel-Bypass Networks},
+	publisher = {ACM},
+	address   = {New York, NY, USA},
+	year      = {2017}
+}
+
+@article{bernstein1996,
+	author  = {P. A. Bernstein},
+	title   = {Middleware: A Model for Distributed System Services},
+	journal = {Communications of the ACM},
+	volume  = {39},
+	number  = {2},
+	year    = {1996}
+}
+
+@book{josuttis2007,
+	author    = {N. M. Josuttis},
+	title     = {SOA in Practice: The Art of Distributed System Design},
+	publisher = {O'Reilly Media},
+	year      = {2007}
+}
+
+@inproceedings{quigley2009,
+	author    = {M. Quigley and K. Conley and B. Gerkey and J. Faust and T. Foote and J. Leibs and R. Wheeler and A. Y. Ng},
+	title     = {ROS: An Open-Source Robot Operating System},
+	booktitle = {ICRA Workshop on Open Source Software},
+	year      = {2009}
+}
+
+@inproceedings{pardo2003,
+	author    = {G. Pardo-Castellote},
+	title     = {OMG Data-Distribution Service: Architectural Overview},
+	booktitle = {23rd International Conference on Distributed Computing Systems Workshops},
+	publisher = {IEEE},
+	year      = {2003}
+}
+
+@book{ammann2016introduction,
+	author    = {P. Ammann and J. Offutt},
+	title     = {Introduction to Software Testing},
+	publisher = {Cambridge University Press},
+	year      = {2016}
+}
+
+@book{pressman2014software,
+	author    = {R. S. Pressman and B. R. Maxim},
+	title     = {Software Engineering: A Practitioner's Approach},
+	edition   = {8th},
+	publisher = {McGraw-Hill Education},
+	year      = {2014}
+}
+
+@book{burnstein2003practical,
+	author    = {I. Burnstein},
+	title     = {Practical Software Testing: A Process-Oriented Approach},
+	publisher = {Springer},
+	year      = {2003}
+}
+
+@book{myers2011art,
+	author    = {G. J. Myers and C. Sandler and T. Badgett},
+	title     = {The Art of Software Testing},
+	edition   = {3rd},
+	publisher = {Wiley},
+	year      = {2011}
+}
+
+@book{kaner1999testing,
+	author    = {C. Kaner and J. Falk and H. Q. Nguyen},
+	title     = {Testing Computer Software},
+	edition   = {2nd},
+	publisher = {Wiley},
+	year      = {1999}
+}
+
+@book{cohn2009succeeding,
+	author    = {M. Cohn},
+	title     = {Succeeding with Agile: Software Development Using Scrum},
+	publisher = {Addison-Wesley},
+	year      = {2009}
+}
+
+@article{liu2009middleware,
+	author    = {J. Liu and M. Parashar},
+	title     = {Enabling Self-Management of Component-Based High-Performance Scientific Applications},
+	journal   = {Future Generation Computer Systems},
+	volume    = {25},
+	number    = {4},
+	publisher = {Elsevier},
+	year      = {2009}
+}
+
+@book{burns2009real,
+	author    = {A. Burns and A. Wellings},
+	title     = {Real-Time Systems and Programming Languages},
+	edition   = {4th},
+	publisher = {Addison-Wesley},
+	year      = {2009}
+}
+
+@article{gorton2006software,
+	author    = {I. Gorton and Y. Liu},
+	title     = {Software Performance Testing for Distributed Systems: A Practical Approach},
+	journal   = {IEEE Software},
+	volume    = {23},
+	number    = {3},
+	year      = {2006}
+}
