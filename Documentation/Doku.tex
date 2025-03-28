@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt,singlespacing]{article}
-% \usepackage[left=2.5cm,right=2.5cm,top=2.5cm]{geometry}
+
 \usepackage{titlesec}
 \usepackage{setspace}
 \usepackage[utf8]{inputenc}
@@ -12,19 +12,28 @@
 \usepackage{pgfplots}
 \usepackage{float}
 \usepackage{listings,xcolor}
+\usepackage[table]{xcolor}
 \usepackage{caption}
+\usepackage{tikz}
+\usepackage{float}
 \usepackage[acronym]{glossaries}
 \makeglossaries
 \addbibresource{sample.bib}
 
-% Abstände definieren
 \titlespacing*{\section}{0pt}{35pt}{35pt}
 \titlespacing*{\subsection}{0pt}{20pt}{20pt}
 \titlespacing*{\subsubsection}{0pt}{10pt}{10pt}
 
+\usepackage[automark,headsepline]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\automark{subsection}
+\ihead{\headmark}
+\ohead{\pagemark}
+
+
 \begin{document}
 \selectlanguage{english}
-% Absatzeinrückung verhindern
+
 \setlength{\parindent}{0ex}
 
 \begin{titlepage}
@@ -35,13 +44,13 @@
 	
 	\begin{minipage}{0.4\textwidth}
 		\begin{flushleft} \large
-			\includegraphics[width=3.5cm]{./Images/conti_logo.png} % Include a department/university logo - this will require the graphicx package
+			\includegraphics[width=3.5cm]{./Images/conti_logo.png}
 		\end{flushleft}
 	\end{minipage}
 	~
 	\begin{minipage}{0.5\textwidth}
 		\begin{flushright} \large
-			\includegraphics[width=7cm]{./Images/logo.png} % Include a department/university logo - this will require the graphicx package
+			\includegraphics[width=7cm]{./Images/logo.png}
 		\end{flushright}
 	\end{minipage}\\[1.5cm]
 	
@@ -100,7 +109,8 @@
 	\vfill % Fill the rest of the page with whitespace
 	
 \end{titlepage}
-
+\pagestyle{plain}
+\pagenumbering{roman}
 \pagebreak
 \vspace*{2cm}
  \textit{Current software development demands quick solutions to fulfill constantly changing requirements. Distributed systems, where software processes run on separate computing nodes and communicate with each other, have become increasingly important. To enable effective communication within such systems, inter-process communication (IPC) frameworks like the enhanced Communication Abstraction Layer (eCAL) are commonly used. eCAL allows data to be exchanged rapidly and reliably, enabling faster implementation of new features and adjustments within complex software projects. } \\ 
@@ -110,21 +120,24 @@
  \textit{To achieve this goal, various system testing approaches will be analyzed and adapted for eCAL. This includes evaluating unit tests, integration tests, and system-level testing methods. Additionally, automation and continuous testing techniques within CI/CD pipelines will be considered. A concrete example implementation of these test strategies will be demonstrated, evaluated, and compared to ensure practical applicability and effectiveness. }
 
 \pagebreak
-
 \tableofcontents
 \pagebreak
 
 % List of Figures
 \listoffigures
+\phantomsection
 \addcontentsline{toc}{section}{List of Figures}
 \pagebreak
 
 % List of Listings
+\renewcommand{\lstlistlistingname}{List of Listings}
 \lstlistoflistings
+\phantomsection
 \addcontentsline{toc}{section}{List of Listings}
 \pagebreak
 
 \section*{List of Abbreviations}
+\phantomsection
 \addcontentsline{toc}{section}{List of Abbreviations}
 
 \begin{tabbing}
@@ -134,9 +147,16 @@
 	\textbf{CI/CD} \> Continuous Integration / Continuous Delivery\\[0.5cm]
 	\textbf{RPC} \> Remote Procedure Call\\[0.5cm]
 	\textbf{IoT} \> Internet of Things\\[0.5cm]
+	\textbf{DDS} \> Data Distribution Service\\[0.5cm]
+	\textbf{ROS} \> Robot Operating System\\[0.5cm]
+	\textbf{UAT} \> User Acceptance Testing\\[0.5cm]
+	\textbf{QoS} \> Quality of Service\\[0.5cm]
+	\textbf{API} \> Application Programming Interface\\[0.5cm]
 \end{tabbing}
 
 \pagebreak
+\pagenumbering{arabic}
+\pagestyle{scrheadings}
 
 \input{Chapter/introduction}
 \input{Chapter/theoretical_foundations}
