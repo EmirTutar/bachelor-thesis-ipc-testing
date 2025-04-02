@@ -1,4 +1,4 @@
-# Bachelor Thesis: Development and Evaluation of a System Testing Framework for eCAL-Based Inter-Process Communication
+# Bachelor Thesis: Developing a Concept for Automated Testing of IPC Middleware – Demonstrated with eCAL
 
 ## Get the PDF - Version
 Latest Version of the Bachelor Thesis:
