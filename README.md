@@ -1,4 +1,4 @@
-# Bachelor Thesis: Developing Testing and Automation Strategies for IPC Middleware – Demonstrated with eCAL
+# Bachelor Thesis: Developing a Concept for Automated Testing of IPC Middleware – Demonstrated with eCAL
 
 ## Get the PDF - Version
 Latest Version of the Bachelor Thesis:
