@@ -319,21 +319,9 @@ White-box testing is based on knowledge of the internal structure and logic of t
 
 Gray-box testing combines elements of black-box and white-box approaches. It requires partial knowledge of the internal workings to create more targeted and effective test cases \cite{ammann2016introduction}.
 
-\subsubsection{The Test Pyramid}
+\subsubsection{Test Pyramid}
 
 The test pyramid is a widely recognized concept used to structure testing strategies in a scalable and maintainable way. It was introduced by Mike Cohn \cite{cohn2009succeeding} to help development teams allocate their testing efforts effectively across different levels of abstraction.
-\\
-\\
-At the base of the pyramid lies a large number of unit tests. These are fast, automated, and verify individual components or functions in isolation. Unit tests provide immediate feedback during development and help detect issues early, making them the foundation of efficient software testing.
-\\
-\\
-The middle layer consists of fewer integration tests. These tests check how different modules or components interact with each other and help uncover interface-related defects that are not visible during unit testing.
-\\
-\\
-At the top of the pyramid are the end-to-end or UI tests. These are high-level tests that simulate real user interactions across the entire system. Although essential for validating system behavior from a user perspective, they are typically slower, more fragile, and more expensive to maintain.
-\\
-\\
-As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the principle that lower-level tests should be more numerous and faster, while higher-level tests should be fewer and more focused. This structure promotes reliable, maintainable, and cost-effective testing workflows.
 
 \begin{figure}[H]
 	\centering
@@ -347,13 +335,13 @@ As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the princ
 		
 		% Top Layer: UI Tests
 		\fill[red!40] (2.8,3.3) -- (5.2,3.3) -- (4,4.8) -- cycle;
-
+		
 		
 		% Labels
 		\node at (4,1) {\textbf{Unit Tests}};
 		\node at (4,2.5) {\textbf{Integration Tests}};
 		\node at (4,3.8) {\shortstack{\textbf{UI/}\\\textbf{End-to-End}\\\textbf{Tests}}};
-
+		
 		% Title
 		\node[font=\bfseries] at (4,5.3) {Test Pyramid};
 		
@@ -362,15 +350,26 @@ As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the princ
 	\label{fig:testpyramid}
 \end{figure}
 
+At the base of the pyramid lies a large number of unit tests. These are fast, automated, and verify individual components or functions in isolation. Unit tests provide immediate feedback during development and help detect issues early, making them the foundation of efficient software testing.
+\\
+\\
+\\
+The middle layer consists of fewer integration tests. These tests check how different modules or components interact with each other and help uncover interface-related defects that are not visible during unit testing.
+\\
+\\
+At the top of the pyramid are the end-to-end or UI tests. These are high-level tests that simulate real user interactions across the entire system. Although essential for validating system behavior from a user perspective, they are typically slower, more fragile, and more expensive to maintain.
+\\
+\\
+As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the principle that lower-level tests should be more numerous and faster, while higher-level tests should be fewer and more focused. This structure promotes reliable, maintainable, and cost-effective testing workflows.
 
 \subsection{Testing in Middleware and Distributed Systems}
 
 \subsubsection{Specific Challenges in Testing Middleware}
 
-Testing middleware within distributed systems presents several inherent challenges due to the complexity of distributed architectures and the abstract nature of middleware functionality. Middleware often operates across heterogeneous platforms and coordinates communication between independent software components. As Tanenbaum and van Steen emphasize, ensuring interoperability and consistent behavior across diverse systems introduces technical and architectural complexity \cite{tanenbaum2017}.
+Testing middleware within distributed systems presents several challenges due to the complexity of distributed architectures and the abstract nature of middleware functionality. Middleware often operates across heterogeneous platforms and coordinates communication between independent software components. As Tanenbaum and van Steen emphasize, ensuring interoperability and consistent behavior across diverse systems introduces technical and architectural complexity \cite{tanenbaum2017}.
 \\
 \\
-A core challenge is \textbf{compatibility}, as middleware must support various hardware, operating systems, network protocols, and data formats. According to Coulouris et al., this requires middleware to provide standard abstractions while hiding platform-specific details \cite{coulouris2012}. 
+A core challenge is \textbf{compatibility}, as middleware must support various hardware, operating systems, network protocols, and data formats. According to Coulouris, this requires middleware to provide standard abstractions while hiding platform-specific details \cite{coulouris2012}. 
 \\
 \\
 \textbf{Performance and scalability} also represent key testing concerns. Middleware must support low-latency communication and efficient resource use under variable loads. Stallings notes that poor synchronization or inefficient resource management at the middleware layer can lead to system-wide bottlenecks \cite{stallings2018}.
