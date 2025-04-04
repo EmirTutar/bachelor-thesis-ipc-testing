@@ -2,4 +2,12 @@
 \clearpage
 \section{Implementation of Integration Tests for eCAL}
 
+This chapter presents the practical implementation of the integration testing concept developed in the previous chapters. The goal is to demonstrate how automated integration tests can be used to validate communication behavior in eCAL-based systems. To achieve this, a test environment was created that combines Robot Framework for test orchestration and Docker for process isolation and simulation.
+\\
+\\
+The implementation focuses on representative publish-subscribe scenarios, where multiple eCAL components exchange messages over shared topics. The setup includes test cases for verifying message delivery, latency, and robustness against failures. In addition, the testing framework includes log collection, output validation, and the generation of test reports for later analysis.
+\\
+\\
+The chapter is structured as follows: Section 5.1 introduces the test architecture and explains the interaction between test components. Section 5.2 describes the setup of the environment using Docker and configuration files. Section 5.3 outlines selected test cases and explains their structure and purpose. Finally, Section 5.4 discusses the automation approach and how the tests can be integrated into continuous development workflows.
+
 \newpage
