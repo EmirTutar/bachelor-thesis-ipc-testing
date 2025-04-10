@@ -16,16 +16,8 @@ To choose suitable testing tools and frameworks, several criteria were defined:
 	\item \textbf{Observability and Reporting:} Tools should offer logging, result exporting, or structured test result visualization (e.g., HTML reports).
 \end{itemize}
 
+\newpage
 \subsection{Evaluation of Tool Candidates}
-
-Figure~\ref{fig:mm_orchestration} presents an overview of evaluated tools and orchestration options in the form of a mind map.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{Images/mm_04_orchestration.png}
-	\caption{Evaluation of orchestration and framework options for IPC testing}
-	\label{fig:mm_orchestration}
-\end{figure}
 
 \subsubsection*{GoogleTest}
 
@@ -54,17 +46,56 @@ Although Gauge has many useful features, it is mostly used for testing web appli
 \\
 Using Gauge for testing IPC would require custom scripts and additional effort to manage process orchestration. Because of this, Gauge is not the best fit for testing systems like eCAL. Further documentation can be found on the official Gauge website~\cite{GaugeDocs}.
 
-\subsubsection*{TestProject, Katalon, and TestComplete}
+\subsubsection*{Katalon and TestComplete}
 
-TestProject, Katalon, and TestComplete are test tools mainly used for testing web interfaces, APIs, and desktop applications. They often include graphical interfaces for designing and running tests, and they support features like recording user actions and parameterizing input values.
+ Katalon and TestComplete are test tools mainly used for testing web interfaces, APIs, and desktop applications. They often include graphical interfaces for designing and running tests, and they support features like recording user actions and parameterizing input values.
 \\
 \\
 However, these tools are not intended for testing IPC systems. They do not support low-level message handling or process orchestration, which are important when testing middleware like eCAL. In addition, most of these tools are not open source, and they often rely on graphical interfaces, which makes them less suitable for headless environments or automation using Docker and CLI.
 \\
 \\
-For these reasons, these tools are not recommended for integration testing of eCAL or similar IPC frameworks. More information can be found in their official documentation~\cite{TestProjectDocs,KatalonDocs,TestCompleteDocs}.
+For these reasons, these tools are not recommended for integration testing of eCAL or similar IPC frameworks. More information can be found in their official documentation~\cite{KatalonDocs,TestCompleteDocs}.
 
+\newpage
+\subsubsection*{behave and Behavior-Driven Development (BDD)}
 
+In addition to the frameworks already discussed, another approach worth mentioning is Behavior-Driven Development (BDD), which combines principles from test-driven development (TDD) and domain-driven design (DDD). BDD focuses on describing software behavior in a language that both developers and non-developers can understand. This is achieved through natural-language test scenarios that capture the expected system behavior from a user's perspective~\cite{North2006}.
+\\
+\\
+A popular BDD framework in the Python ecosystem is \texttt{behave}~\cite{BehaveDocs}. It allows developers to write executable specifications using the Gherkin syntax (Given–When–Then). These specifications describe how the system should behave in various scenarios, and the test steps are mapped to Python functions that implement the expected actions and assertions.
+\\
+\\
+Compared to Robot Framework, \texttt{behave} operates at a lower abstraction level. It requires more manual setup but provides more direct control over test logic and structure. This can be an advantage in complex test environments, where flexibility and integration with Python modules is needed. Like Robot Framework, \texttt{behave} is suitable for system and integration testing and can be integrated into CI/CD pipelines. However, it does not include built-in orchestration features like process control or test reporting. These features must be implemented separately using Python libraries or shell scripts.
+\\
+\\
+Overall, \texttt{behave} is a strong candidate for projects that follow a BDD workflow and benefit from human-readable test scenarios. It is especially useful when stakeholders or domain experts should be involved in defining test cases. However, for the use case of orchestrating multiple IPC processes in eCAL, Robot Framework may be a more practical choice due to its built-in libraries and simpler process control.
+\\
+
+Table~\ref{tab:framework_comparison_extended} presents an overview of evaluated tools in this Chapter.
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.4}
+	\begin{tabular}{|p{2.31cm}|p{1cm}|p{1.7cm}|p{2.3cm}|p{1cm}|p{1cm}|}
+		\hline
+		\textbf{Framework} & \textbf{CLI} & \textbf{Multi-Process} & \textbf{IPC-Suitability} & \textbf{Open Src} & \textbf{CI/ CD} \\
+		\hline
+		\textbf{Google Test}            & \cmark & \xmark & Partially         & \cmark & \cmark \\
+		\hline
+		\textbf{Robot Framework}    & \cmark & \cmark & Yes               & \cmark & \cmark \\
+		\hline
+		\textbf{Gauge Test}  & \cmark & \xmark  & Limited           & \cmark & \cmark \\
+		\hline
+		\textbf{behave (BDD)}  & \cmark & \xmark  & Yes (with py manualy)      & \cmark & \cmark \\
+		\hline
+		\textbf{Katalon}   & \xmark & \xmark & No                & \xmark & \xmark \\
+		\hline
+		\textbf{Test-Complete}   & \xmark & \xmark & No                & \xmark & \xmark \\
+		\hline
+	\end{tabular}
+	\caption{Comparison of test frameworks for IPC middleware integration testing}
+	\label{tab:framework_comparison_extended}
+\end{table}
 
 \subsection{Feasibility for eCAL Integration}
 

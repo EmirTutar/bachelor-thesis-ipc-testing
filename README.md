@@ -14,10 +14,10 @@ Study Program: Applied Computer Science
 This bachelor's thesis deals with developing and evaluating a system testing framework for Inter-Process Communication (IPC) based on eCAL (enhanced Communication Abstraction Layer). The aim is to create a standardized and reliable method to test distributed applications, ensuring stable communication, robustness, and performance in realistic scenarios.
 
 ## Motivation
-As distributed systems become increasingly complex and requirements grow in industries such as automotive, robotics, and IoT, reliable middleware solutions become more important. eCAL is a high-performance IPC framework, but currently, there is no standardized method for comprehensive system testing.
+As distributed systems become increasingly complex and requirements grow in industries such as automotive, robotics, and IoT, reliable middleware solutions become more important. eCAL is a IPC Middleware, but currently, there is no standardized method for Automated Integration testing.
 
 This thesis addresses this gap by:
-- Creating a systematic approach to system tests
+- Creating a systematic approach to integration tests
 - Developing specific test cases and automation
 - Evaluating test results and integrating them into CI/CD pipelines
 
@@ -33,9 +33,11 @@ This thesis addresses this gap by:
 BA_Ecal_Test_Framework
  ├── Documentation
  │   ├── Doku.tex (LaTeX file of the thesis)
- │   ├── Bachelor_thesis.pdf (Automatically generated PDF)
+ │   ├── Doku.pdf (Localy builded PDF and pushed)
  │   └── Images
  │       └── (.png files)
+ │   └── Expose
+ │       └── Expose.pdf (An overview of the Thesis)
  │   └── Chapters
  │       └── (.tex files)
  ├── Source
