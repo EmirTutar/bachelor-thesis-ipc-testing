@@ -46,15 +46,15 @@ Although Gauge has many useful features, it is mostly used for testing web appli
 \\
 Using Gauge for testing IPC would require custom scripts and additional effort to manage process orchestration. Because of this, Gauge is not the best fit for testing systems like eCAL. Further documentation can be found on the official Gauge website~\cite{GaugeDocs}.
 
-\subsubsection*{TestProject, Katalon, and TestComplete}
+\subsubsection*{Katalon and TestComplete}
 
-TestProject, Katalon, and TestComplete are test tools mainly used for testing web interfaces, APIs, and desktop applications. They often include graphical interfaces for designing and running tests, and they support features like recording user actions and parameterizing input values.
+ Katalon and TestComplete are test tools mainly used for testing web interfaces, APIs, and desktop applications. They often include graphical interfaces for designing and running tests, and they support features like recording user actions and parameterizing input values.
 \\
 \\
 However, these tools are not intended for testing IPC systems. They do not support low-level message handling or process orchestration, which are important when testing middleware like eCAL. In addition, most of these tools are not open source, and they often rely on graphical interfaces, which makes them less suitable for headless environments or automation using Docker and CLI.
 \\
 \\
-For these reasons, these tools are not recommended for integration testing of eCAL or similar IPC frameworks. More information can be found in their official documentation~\cite{TestProjectDocs,KatalonDocs,TestCompleteDocs}.
+For these reasons, these tools are not recommended for integration testing of eCAL or similar IPC frameworks. More information can be found in their official documentation~\cite{KatalonDocs,TestCompleteDocs}.
 
 \newpage
 \subsubsection*{behave and Behavior-Driven Development (BDD)}
@@ -84,11 +84,13 @@ Table~\ref{tab:framework_comparison_extended} presents an overview of evaluated 
 		\hline
 		\textbf{Robot Framework}    & \cmark & \cmark & Yes               & \cmark & \cmark \\
 		\hline
-		\textbf{Gauge Test}  & \cmark & \xmark & Limited           & \cmark & \cmark \\
+		\textbf{Gauge Test}  & \cmark & \xmark  & Limited           & \cmark & \cmark \\
 		\hline
-		\textbf{behave (BDD)}  & \cmark & \xmark & Yes -(manualy)      & \cmark & \cmark \\
+		\textbf{behave (BDD)}  & \cmark & \xmark  & Yes (with py manualy)      & \cmark & \cmark \\
 		\hline
 		\textbf{Katalon}   & \xmark & \xmark & No                & \xmark & \xmark \\
+		\hline
+		\textbf{Test-Complete}   & \xmark & \xmark & No                & \xmark & \xmark \\
 		\hline
 	\end{tabular}
 	\caption{Comparison of test frameworks for IPC middleware integration testing}
