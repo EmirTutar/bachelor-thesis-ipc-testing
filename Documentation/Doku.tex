@@ -9,6 +9,8 @@
 \usepackage[style=ieee, sorting=none]{biblatex}
 \usepackage[english]{babel}
 \usepackage{tikz}
+\usetikzlibrary{positioning, fit}
+\usepackage{booktabs}
 \usepackage{pgfplots}
 \usepackage{amssymb}
 \usepackage{pifont}
@@ -33,6 +35,22 @@
 \ohead{\pagemark}
 \newcommand{\cmark}{\textcolor{green!60!black}{\ding{51}}}
 \newcommand{\xmark}{\textcolor{red!80!black}{\ding{55}}}  
+
+\lstdefinestyle{cppstyle}{
+	language=c,
+	numbers=left,
+	numberstyle=\footnotesize,
+	numbersep=6pt,
+	breaklines=true,
+	showstringspaces=false,
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\bfseries\color[rgb]{0,0,1},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	frame=single,
+	rulecolor=\color{black}
+}
+
 
 \begin{document}
 \selectlanguage{english}
@@ -166,10 +184,8 @@
 \input{Chapter/02_theoretical_background}
 \input{Chapter/03_test_requirements}
 \input{Chapter/04_tools_frameworks}
-\input{Chapter/05_implementation}
-\input{Chapter/06_ci_cd}
-\input{Chapter/07_evaluation.tex}
-\input{Chapter/08_conclusion.tex}
+\input{Chapter/05_test_design}
+\input{Chapter/06_conclusion.tex}
 \printbibliography[heading=bibintoc]
 \end{document}
 
