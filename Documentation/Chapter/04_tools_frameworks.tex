@@ -12,8 +12,9 @@ To choose suitable testing tools and frameworks, several criteria were defined:
 	\item \textbf{Language Support:} The framework should support the languages already in use in the development environment, particularly C++ and Python.
 	\item \textbf{Automation Capabilities:} Support for test automation, headless execution, and integration into CI/CD systems is essential.
 	\item \textbf{Support for IPC Mechanisms:} Tools should be able to handle the orchestration of multi-process communication patterns, such as publish-subscribe and request-response.
-	\item \textbf{Platform Compatibility:} The framework must work on Linux, as this is the primary target platform.
+	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as this is the primary target platform.
 	\item \textbf{Observability and Reporting:} Tools should offer logging, result exporting, or structured test result visualization (e.g., HTML reports).
+	\item \textbf{Open Source}: TO DO
 \end{itemize}
 
 \newpage
@@ -76,26 +77,27 @@ Table~\ref{tab:framework_comparison_extended} presents an overview of evaluated 
 \begin{table}[H]
 	\centering
 	\renewcommand{\arraystretch}{1.4}
-	\begin{tabular}{|p{2.31cm}|p{1cm}|p{1.7cm}|p{2.3cm}|p{1cm}|p{1cm}|}
+	\begin{tabular}{|p{2.31cm}|p{1cm}|p{1.7cm}|p{2.1cm}|p{1cm}|p{1cm}|p{1.7cm}|}
 		\hline
-		\textbf{Framework} & \textbf{CLI} & \textbf{Multi-Process} & \textbf{IPC-Suitability} & \textbf{Open Src} & \textbf{CI/ CD} \\
+		\textbf{Framework} & \textbf{CLI} & \textbf{Multi-Process} & \textbf{IPC-Suitability} & \textbf{Open Src} & \textbf{CI/ CD} & \textbf{Reports} \\
 		\hline
-		\textbf{Google Test}            & \cmark & \xmark & Partially         & \cmark & \cmark \\
+		\textbf{Google Test}         & \cmark & \xmark  & Partially               & \cmark & \cmark & XML only \\
 		\hline
-		\textbf{Robot Framework}    & \cmark & \cmark & Yes               & \cmark & \cmark \\
+		\textbf{Robot Framework}     & \cmark & \cmark  & Yes                     & \cmark & \cmark & HTML, XML \\
 		\hline
-		\textbf{Gauge Test}  & \cmark & \xmark  & Limited           & \cmark & \cmark \\
+		\textbf{Gauge Test}          & \cmark & \xmark  & Limited                 & \cmark & \cmark & HTML \\
 		\hline
-		\textbf{behave (BDD)}  & \cmark & \xmark  & Yes (with py manualy)      & \cmark & \cmark \\
+		\textbf{behave (BDD)}        & \cmark & \xmark  & Yes (manual scripted)            & \cmark & \cmark & Text/ Custom \\
 		\hline
-		\textbf{Katalon}   & \xmark & \xmark & No                & \xmark & \xmark \\
+		\textbf{Katalon}             & \xmark & \xmark  & No                      & \xmark & \xmark & HTML, GUI \\
 		\hline
-		\textbf{Test-Complete}   & \xmark & \xmark & No                & \xmark & \xmark \\
+		\textbf{Test-Complete}        & \xmark & \xmark  & No                      & \xmark & \xmark & HTML, GUI \\
 		\hline
 	\end{tabular}
-	\caption{Comparison of test frameworks for IPC middleware integration testing}
-	\label{tab:framework_comparison_extended}
+	\caption{Comparison of test frameworks for IPC middleware integration testing, including reporting capabilities}
+	\label{tab:framework_comparison_reporting}
 \end{table}
+
 
 \subsection{Feasibility for eCAL Integration}
 
