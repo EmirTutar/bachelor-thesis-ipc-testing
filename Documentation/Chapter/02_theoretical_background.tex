@@ -16,20 +16,20 @@ Software testing is organized into different levels to detect defects at specifi
 \textbf{Unit Testing:}
 
 \vspace{0.4em}
-Unit testing focuses on verifying individual components or units of a system in isolation. These tests are typically written and executed by developers during the coding phase and aim to detect logic errors or incorrect function outputs early \cite{pressman2014software}.
+Unit testing focuses on verifying individual components or units of a system in isolation. These tests are typically written and executed by developers during the coding phase and aim to detect logic errors or incorrect function outputs early \cite{pressman2014software}, \cite{spillner2019softwaretest}.
 
 \vspace{1em}
 \textbf{Integration Testing:}
 
 \vspace{0.4em}
-Integration testing validates the interaction between different modules or components. This level ensures that data is correctly passed and interpreted between integrated parts of the application \cite{burnstein2003practical}.
+Integration testing validates the interaction between different modules or components. This level ensures that data is correctly passed and interpreted between integrated parts of the application \cite{burnstein2003practical}, \cite{spillner2019softwaretest}.
 
 \newpage
 
 \textbf{System Testing:}
 
 \vspace{0.4em}
-System testing examines the entire integrated system as a whole. It verifies that the system behaves correctly under various conditions, including performance, security, and usability aspects \cite{myers2011art}.
+System testing examines the entire integrated system as a whole. It verifies that the system behaves correctly under various conditions, including performance, security, and usability aspects \cite{myers2011art}, \cite{spillner2019softwaretest}.
 
 \vspace{1em}
 In distributed systems, however, the boundary between integration testing and system testing can become blurred. Since individual components often run on different machines or communicate asynchronously, validating their interaction frequently involves testing parts of the overall system behavior as well. As a result, what is formally considered integration testing may already include system-level characteristics such as network latency, synchronization, or fault tolerance.
@@ -66,19 +66,19 @@ Various techniques are used to design efficient and targeted test cases:
 \textbf{Black-Box Testing}
 
 \vspace{0.4em}
-Black-box testing validates the system's functionality without considering its internal code structure. Testers use input-output analysis to confirm expected behavior \cite{myers2011art}.
+Black-box testing validates the system's functionality without considering its internal code structure. Testers use input-output analysis to confirm expected behavior \cite{myers2011art}, \cite{spillner2019softwaretest}.
 
 \vspace{1em}
 \textbf{White-Box Testing}
 
 \vspace{0.4em}
-White-box testing is based on knowledge of the internal structure and logic of the system. Testers examine decision paths, loops, and control structures to ensure code coverage \cite{burnstein2003practical}.
+White-box testing is based on knowledge of the internal structure and logic of the system. Testers examine decision paths, loops, and control structures to ensure code coverage \cite{burnstein2003practical}, \cite{spillner2019softwaretest}.
 
 \vspace{1em}
 \textbf{Gray-Box Testing}
 
 \vspace{0.4em}
-Gray-box testing combines elements of black-box and white-box approaches. It requires partial knowledge of the internal workings to create more targeted and effective test cases \cite{ammann2016introduction}.
+Gray-box testing combines elements of black-box and white-box approaches. It requires partial knowledge of the internal workings to create more targeted and effective test cases \cite{ammann2016introduction}, \cite{spillner2019softwaretest}.
 
 \subsubsection{Test Pyramid}
 
@@ -107,7 +107,7 @@ The test pyramid is a widely recognized concept used to structure testing strate
 		\node[font=\bfseries] at (4,5.3) {Test Pyramid};
 		
 	\end{tikzpicture}
-	\caption{The Test Pyramid illustrating test distribution across levels}
+	\caption{The Test Pyramid illustrating test distribution across levels (adapted from Cohn \cite{cohn2009succeeding}).}
 	\label{fig:testpyramid}
 \end{figure}
 
@@ -186,8 +186,9 @@ Inter-process communication (IPC) refers to mechanisms that allow processes to c
 
 \subsubsection{Common IPC Mechanisms}
 
-There are several commonly used IPC mechanisms, each suitable for different scenarios and requirements. The most frequently used methods include shared memory, message passing, and remote procedure calls (RPC) \cite{stallings2018,tanenbaum2015}.
+There are several commonly used IPC mechanisms, each suitable for different scenarios and requirements. The most frequently used methods include shared memory, message passing, and remote procedure calls \cite{stallings2018,tanenbaum2015}.
 
+\vspace{1em}
 \begin{figure}[H]
 	\centering
 	\begin{tikzpicture}[
