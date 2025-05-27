@@ -565,13 +565,24 @@ The simplicity and structure of this test approach makes it well suited for inte
 \vspace{0.9em}
 Furthermore, since Docker is used for test isolation, the tests are highly portable and can run in local development environments, on build servers, or in virtualized testing infrastructure with minimal setup.
 
+\newpage
 \subsection{Summary}
 
-The implementation of integration tests for eCAL showed that the combination of Docker and Robot Framework is well suited for testing inter-process communication in a modular and reproducible manner. The infrastructure allows test scenarios to be executed consistently and extended easily. Especially the ability to simulate component failures (e.g., network drop or process crash) proved to be helpful in analyzing system robustness.
+This chapter presented the design, implementation, and execution of a modular integration test system for the eCAL middleware. By combining Docker-based process isolation with the flexible automation capabilities of Robot Framework, it was possible to validate key properties of publish-subscribe communication in a controlled and reproducible environment.
 
-\vspace{0.9em}
-Basic communication patterns such as single or multiple publishers and subscribers worked reliably in all tested transport modes, including \texttt{local\_udp}, \texttt{local\_tcp}, and \texttt{network\_udp}. However, communication via \texttt{local\_shm} was not always functional in Docker containers due to the isolation between container namespaces, which limits shared memory usage. This restriction highlights an important consideration when testing IPC frameworks in containerized environments.
+\vspace{1em}
+The selected test cases focused on core functionalities such as reliable message delivery, multi-node communication, and fault tolerance under crash or failure conditions. Most scenarios were tested across all five supported eCAL transport modes, these are shared memory (SHM), UDP, and TCP in both local and network configurations. This ensured broad coverage of both common and edge-case communication patterns.
 
-\vspace{0.9em}
-The framework is already equipped to be extended with further test categories. For example, future work could include RPC-based communication, service availability tests, and metrics such as round-trip time or failure recovery time. Moreover, integration into CI/CD pipelines would enable automatic regression testing during development and deployment.
+\vspace{1em}
+Code examples demonstrated how publishers, subscribers, and test logic are implemented and configured, while structured success criteria and exit codes provided clear validation of expected behavior. The test infrastructure also proved effective in simulating failure scenarios such as process crashes and message loss, confirming the robustness and resilience of the eCAL middleware.
+
+\vspace{1em}
+A notable insight from these tests is the performance–resilience trade-off introduced by advanced features like Zero-Copy SHM. While this mode improves throughput by eliminating memory copies, it also increases inter-process coupling and may compromise fault isolation if a subscriber crashes during message access. Future deployments should carefully assess whether the performance benefits of Zero-Copy justify its potential stability risks.
+
+\vspace{1em}
+The framework is already equipped to be extended with further test categories. For example, future work could include RPC-based communication, service availability tests, and metrics such as round-trip time. Moreover, integration into CI/CD pipelines would enable automatic regression testing during development and deployment.
+
+\vspace{1em}
+In conclusion, the developed test system successfully demonstrates how integration tests can be used not only for functional verification but also to explore system behavior under realistic and adverse conditions. It provides a solid foundation for continuous validation of middleware functionality in research, development, and production contexts.
+
 
