@@ -154,7 +154,7 @@ This section presents selected integration test cases that were implemented to v
 For every test case, the objective, execution steps, and success criteria are described. In addition, code examples are provided to illustrate important implementation details, such as how publishers and subscribers are configured and how messages are processed. Each test case ends with a short evaluation, which reflects on the observed behavior and explains how the results contribute to the overall test strategy.
 
 \vspace{1em}
-\subsubsection*{Test Case 1: Basic Publisher to Subscriber Communication}
+\subsubsection{Test Case 1: Publisher to Subscriber Communication}
 
 \textbf{Objective:}
 
@@ -246,7 +246,7 @@ This basic test confirms that eCAL reliably delivers messages across all support
 
 \vspace{1em}
 \vspace{1em}
-\subsubsection*{Test Case 2: Multiple Publishers and Multiple Subscribers on One Topic}
+\subsubsection{Test Case 2: Multiple Publishers and Subscribers}
 
 \textbf{Objective:}
 
@@ -320,7 +320,7 @@ By implementing N:N tests across all five eCAL transport modes (\texttt{local\_s
 
 \vspace{1em}
 \vspace{1em}
-\subsubsection*{Test Case 3: Publisher Crash During Transmission}
+\subsubsection{Test Case 3: Publisher Crash During Transmission}
 
 \textbf{Objective:} 
 
@@ -406,7 +406,7 @@ This test demonstrates that eCAL remains fully functional and continues to deliv
 The use of a crash publisher simulates real-world process failures, and the test verifies that message delivery remains uninterrupted. By comparing the message counts, the system ensures that no "phantom" messages are received after the crash point. This approach can be used as a template for testing fault tolerance in distributed IPC systems.
 
 \vspace{1em}
-\subsubsection*{Test Case 4: Subscriber Crash During Reception}
+\subsubsection{Test Case 4: Subscriber Crash During Reception}
 
 \textbf{Objective:} \\
 Verify that the communication remains stable even when one subscriber crashes while receiving large messages.
@@ -499,7 +499,7 @@ In conclusion, this test underscores both the reliability of eCAL in standard SH
 \newpage
 
 \vspace{1em}
-\subsubsection*{Test Case 5: Network Failure Simulation}
+\subsubsection{Test Case 5: Network Failure Simulation}
 
 TODO
 
