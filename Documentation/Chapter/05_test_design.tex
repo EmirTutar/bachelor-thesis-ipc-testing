@@ -206,14 +206,14 @@ The subscriber callback reads the first byte of the received buffer and casts it
 \vspace{0.5em}
 
 \begin{lstlisting}[style=cppstyle, caption={Binary buffer with value 42 used by the publisher}, label={lst:basic_pub_send}, captionpos=b]
-	std::vector<unsigned char> buffer(10, 42);
-	pub.Send(buffer.data(), buffer.size());
+ std::vector<unsigned char> buffer(10, 42);
+ pub.Send(buffer.data(), buffer.size());
 \end{lstlisting}
 
 \begin{lstlisting}[style=cppstyle, caption={Extracting first byte from the received message in subscriber}, label={lst:basic_sub_receive}, captionpos=b]
-	int value = static_cast<int>(
-	static_cast<const unsigned char*>(data_.buffer)[0]
-	);
+ int value = static_cast<int>(
+ static_cast<const unsigned char*>(data_.buffer)[0]
+ );
 \end{lstlisting}
 
 \begin{lstlisting}[style=cppstyle, caption={Argument setup using TCLAP in both publisher and subscriber}, label={lst:tclap_basic}, captionpos=b]
@@ -501,12 +501,125 @@ In conclusion, this test underscores both the reliability of eCAL in standard SH
 \vspace{1em}
 \subsubsection{Test Case 5: Network Failure Simulation}
 
-TODO
+\textbf{Objective:}
+
+\vspace{0.4em}
+Verify that after a simulated network failure, a new local UDP publisher can be successfully launched and establish communication with a running local UDP subscriber. This simulates a scenario where a redundant or backup component becomes active only after failure detection.
+
+\vspace{0.5em}
+\textbf{Execution:}
+\begin{itemize}
+	\item \textbf{Phase 1:} A local UDP publisher (\texttt{local\_publisher\_1}) and a subscriber run in the same container. The publisher sends payloads with value 42.
+	\item \textbf{Phase 2:} A network UDP publisher (\texttt{network\_publisher}) runs in a separate container and sends payloads with value 43.
+	\item \textbf{Phase 3:} After 7 seconds, the \texttt{network\_publisher} container is disconnected from the Docker network to simulate a network cable unplug.
+	\item \textbf{Phase 4:} A second local UDP publisher (\texttt{local\_publisher\_2}) is started within the original container after a short delay. It sends payloads with value 44.
+	\item The subscriber logs received values and verifies all expected transitions.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Success Criteria:}
+\begin{itemize}
+	\item Subscriber receives:
+	\begin{itemize}
+		\item All sent messages with value 42 (from local\_publisher\_1).
+		\item At least 2 messages with value 43 (before network disconnection).
+		\item All sent messages with value 44 (from local\_publisher\_2 after crash).
+	\end{itemize}
+	\item No communication deadlocks or crashes occur.
+	\item Subscriber process exits with code \texttt{0}.
+\end{itemize}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Role} & \textbf{Transport Mode} & \textbf{Payload} \\
+		\midrule
+		local\_publisher\_1 & Initial Local Publisher & local\_udp & \texttt{0x2A} (42) \\
+		network\_publisher & Network Publisher & network\_udp & \texttt{0x2B} (43) \\
+		local\_publisher\_2 & Delayed Local Publisher & local\_udp & \texttt{0x2C} (44) \\
+		subscriber & Receiver & local\_udp & 42, 43, 44 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Configuration for extended Network Failure Simulation}
+	\label{tab:network_failure_sim_44}
+\end{table}
+
+\vspace{0.4em}
+\textbf{Code Examples:}
+
+\vspace{0.4em}
+All publishers follow the same sending logic (Listing~\ref{lst:pubsendlogic44}) but use different payload values.
+
+\begin{lstlisting}[style=cppstyle, caption={General publisher loop}, label={lst:pubsendlogic44}, captionpos=b]
+ std::vector<unsigned char> buffer(10, payload); 
+ // e.g. 42, 43, or 44
+  for (int i = 0; i < count; ++i){
+   pub.Send(buffer.data(), buffer.size());
+   sleep_for(std::chrono::milliseconds(delay));
+  }
+\end{lstlisting}
+
+\vspace{0.4em}
+The new publisher \texttt{local\_udp\_pub\_2} uses payload \texttt{44} and is launched inside the same container as the subscriber (Listing~\ref{lst:entrypointlocaludp2}).
+
+\begin{lstlisting}[style=cppstyle, caption={Entrypoint launches second local publisher after delay}, label={lst:entrypointlocaludp2}, captionpos=b]
+ ./local_udp_pub --topic "$TOPIC" --name pub1_${NAME} &
+ 
+ ./network_crash_sub --topic "$TOPIC" --name sub_${NAME} &
+ SUB_PID=$!
+ 
+ sleep 8
+ ./local_udp_pub_2 --topic "$TOPIC" --name pub2_${NAME} &
+ 
+ wait $SUB_PID
+ EXIT_CODE=$?
+ exit $EXIT_CODE
+\end{lstlisting}
+
+\vspace{0.4em}
+The subscriber logs all payloads and reports a summary (Listing~\ref{lst:subscriber_check_44}).
+
+\begin{lstlisting}[style=cppstyle, caption={Subscriber validation logic for all payloads}, label={lst:subscriber_check_44}, captionpos=b]
+ int count_42 = 0;
+ int count_43 = 0;
+ int count_44 = 0;
+	
+ void OnReceive(...) {
+   int val = data_[0];
+   if (val == 42) ++count_42;
+   if (val == 43) ++count_43;
+   if (val == 44) ++count_44;
+ }
+ 
+ // checks if the amount of messages are correct
+ if (expected_42 && expected_43 && expected_44)
+   return 0;
+ else
+   return 1;
+\end{lstlisting}
+
+\vspace{1em}
+\textbf{Evaluation:}
+
+\vspace{0.4em}
+This test simulates a common failure mode in networked IPC systems: a remote communication node becomes unavailable due to a crash or disconnection. The successful delivery of messages from the locally started fallback publisher demonstrates that eCAL can recover from partial system failures and maintain local communication paths without interruption.
+
+\vspace{1em}
+The use of different payloads (42, 43 and 44) allows for precise identification of message origin. By verifying that all types were received in sufficient quantity, the test ensures that the system responded correctly to the simulated fault: it handled remote messages, then did not crash with local messages.
+
+\vspace{1em}
+From an architecture perspective, this test validates the middleware's robustness and flexibility across dynamic transport topology changes. It demonstrates that eCAL can switch between local and network transport without requiring restarts or reinitialization of the subscriber process.
+
+\vspace{1em}
+This scenario is especially relevant for distributed systems that combine in-vehicle communication (local) with cloud-connected components (network). It proves that local subsystems can continue operating even in case of external failure.
+
+\subsubsection{Test Case 6: TODO}
 
 \newpage
 \subsection{Handling of Edge Cases}
 
-In addition to testing typical communication flows, the test infrastructure also covers a variety of edge cases that may occur in distributed systems. These cases are particularly important for evaluating the robustness and fault tolerance of the eCAL middleware under non-ideal conditions.
+In addition to testing typical communication flows, the test infrastructure also covers a variety of edge cases that may occur in distributed systems. These cases are particularly important for evaluating the robustness and fault tolerance of the middleware under non-ideal conditions.
 
 \vspace{0.5em}
 The following categories of edge cases are addressed:
