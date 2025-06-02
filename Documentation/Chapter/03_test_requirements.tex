@@ -1,11 +1,11 @@
 \selectlanguage{english}
 \clearpage
 
-\section{Requirements and Design of Integration Testing for IPC Middleware}
+\section{Test Requirements for IPC Middleware}
 
 This chapter defines the requirements for integration testing in the context of IPC middleware and proposes a structured test strategy. The aim is to address communication-specific challenges such as message loss, timing behavior, and interaction between distributed components. Based on these requirements, a modular and reusable test architecture is designed, serving as the foundation for the implementation and evaluation in later chapters.
 
-\subsection{Analysis of Middleware Test Requirements}
+\subsection{Analysis of Test Requirements}
 
 Middleware-based systems pose unique testing requirements that differ from classical monolithic systems. Key challenges include the following:
 
@@ -23,40 +23,52 @@ Middleware-based systems pose unique testing requirements that differ from class
 
 
 \newpage
+
 \subsection{Functional and Non-Functional Test Objectives}
 
-In the context of IPC middleware, integration testing does not only focus on testing individual components but also on validating how they interact with each other. These interactions include not just message correctness, but also performance, timing, and fault handling. Therefore, integration test objectives are typically divided into two categories: \textit{functional} and \textit{non-functional} requirements~\cite{gorton2006software, tanenbaum2017}.
+Integration testing in IPC middleware not only verifies the correct exchange of data between distributed components but also examines how reliably and efficiently the system performs under realistic conditions. These test objectives are generally classified into two categories: \textit{functional} and \textit{non-functional} requirements~\cite{gorton2006software, tanenbaum2017, spillner2019softwaretest}.
 
-\subsubsection{Functional Objectives}
+\vspace{1em}
+\textbf{Functional Objectives}
 
-Functional objectives ensure that the middleware behaves as expected during normal communication. One important goal is to verify that messages are delivered correctly from publishers to the intended subscribers. This also includes checking topic-based filtering, so that only relevant data is received by each component~\cite{josuttis2007}.
-\\
-\\
-Tests should also cover how the system handles unexpected or incorrect messages. For example, messages with invalid formats, wrong types, or missing fields should not cause the system to crash or behave unpredictably~\cite{burnstein2003practical}.
-\\
-\\
-In addition, if the middleware supports service communication such as Remote Procedure Calls (RPC), tests must confirm that each request gets a correct and timely response. This also includes timeout handling in case a service is not available.
+\vspace{0.4em}
+Functional tests focus on whether the system behaves correctly in terms of its specified input-output behavior. In IPC middleware, this includes the delivery of messages, handling of subscriptions, and validation of message formats~\cite{burnstein2003practical, spillner2019softwaretest}. Functional requirements describe \textit{what} the system must do, independent of the conditions under which it is executed.
 
-\subsubsection{Non-Functional Objectives}
+\vspace{1em}
+Examples of functional test objectives include:
 
-Non-functional objectives evaluate how well the system performs in different situations. One key metric is \textit{latency}, which measures the time it takes for a message to travel from sender to receiver. Another is \textit{throughput}, which shows how many messages can be transmitted in a given time~\cite{stallings2018}.
-\\
-\\
-Other important aspects include \textit{fault tolerance} and \textit{recovery}. The middleware should be able to handle failures, such as lost network connections or crashed processes, and continue working correctly after a restart~\cite{burns2009real}.
-\\
-\\
-Tests in this category often simulate high message loads, connection losses, or system restarts to see how the middleware reacts and whether it maintains stable communication without data loss.
+\begin{itemize}
+	\item Ensuring that a subscriber receives only messages for topics it subscribed to.
+	\item Verifying that malformed messages are rejected without crashing the system.
+	\item Testing that RPC requests return valid responses or trigger appropriate timeout behavior.
+	\item Validating transport abstraction by checking that core communication works across TCP, UDP, and shared memory.
+	\item Verifying component coordination such as startup sequences and shutdown order across distributed nodes.
+\end{itemize}
 
-\subsubsection{Visualization}
+\vspace{1em}
+\textbf{Non-Functional Objectives}
 
-To give a clear overview of these requirements, Figure~\ref{fig:mm_requirements} shows a mind map that summarizes the functional and non-functional requirements. This diagram is useful for understanding the full scope of integration testing and serves as a reference for designing test cases.
+\vspace{0.4em}
+Non-functional tests evaluate \textit{how well} the system performs its tasks focusing on the system’s efficiency, robustness, and quality attributes. These include timing, fault tolerance, scalability, and platform independence~\cite{stallings2018, spillner2019softwaretest}.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{Images/mm_02_01_requirements.png}
-	\caption{Functional, non-functional, and environmental requirements for integration testing of IPC middleware}
-	\label{fig:mm_requirements}
-\end{figure}
+\vspace{1em}
+Key examples of non-functional test objectives:
+
+\begin{itemize}
+	\item \textbf{Timing Behavior:} Measure latency, jitter, and message ordering under various load and delay conditions.
+	\item \textbf{Robustness and Recovery:} Evaluate how the system handles injected faults such as message loss, simulated crashes, or network disruptions.
+	\item \textbf{Scalability and Stability:} Assess performance and resource usage as the number of processes and message rates increase.
+	\item \textbf{Cross-Transport Behavior:} Ensure consistent system performance across different transport mechanisms.
+\end{itemize}
+
+According to \textit{Basiswissen Softwaretest}~\cite{spillner2019softwaretest}, non-functional requirements often affect user acceptance. Although they are sometimes assumed implicitly (e.g. reliability, maintainability), they require explicit validation.
+
+\vspace{1em}
+\textbf{Note on Benchmarking}
+
+\vspace{0.4em}
+While certain test goals such as latency and throughput measurements are commonly associated with benchmarking, this thesis does not aim to conduct a benchmarking campaign. Instead, such metrics are used selectively within integration tests to validate non-functional characteristics such as timing behavior and robustness. The primary focus lies on correctness and communication stability under defined test conditions, rather than comparative performance evaluations across systems or configurations.
+
 
 \subsection{Communication Scenarios}
 
@@ -69,12 +81,12 @@ To create meaningful test cases, representative communication scenarios must be 
 	
 	\item \textbf{Many-to-one communication:} Multiple publishers send to a shared topic. Tests message interleaving and synchronization.
 	
-	\item \textbf{Multi-host communication:} Tests cross-host communication, IP multicast behavior, and transport compatibility.
+	\item \textbf{Multi-host communication:} Tests cross-host communication and transport compatibility.
 	
-	\item \textbf{Failure scenarios:} Introduce delays, drop publishers/subscribers mid-test, or overload the system to test resilience.
+	\item \textbf{Failure scenarios:} Introduce network failure, drop publishers/subscribers mid-test, or overload the system to test resilience.
 \end{itemize}
 
-\subsection{Design of a Modular and Reusable Test Strategy}
+\subsection{Design of a Modular Test Strategy}
 
 To address these requirements, a modular test architecture is proposed, consisting of the following layers:
 
@@ -89,6 +101,6 @@ This layered design allows reuse of components across different test cases and e
 
 \subsection{Summary}
 
-This chapter defined the requirements for integration testing in IPC middleware environments and proposed a test architecture that is both reusable and automation-friendly. These concepts will be implemented and validated using the eCAL framework in the following chapter.
+This chapter defined the requirements for integration testing in IPC middleware environments and proposed a test architecture that is both reusable and automation-friendly. In the following chapters, this test architecture will be applied to an actual middleware using eCAL as a representative implementation platform.
 
 

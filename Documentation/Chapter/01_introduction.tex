@@ -3,31 +3,35 @@
 
 \section{Introduction}
 
-In this chapter, the topic of this thesis is introduced. Section 1.1 explains the motivation behind developing a systematic testing framework for eCAL-based inter-process communication. Then, section 1.2 describes the main objectives and goals of this thesis. Finally, section 1.3 provides an overview of the structure of the entire document.
+This chapter introduces the overall topic and scope of the thesis. Section 1.1 outlines the motivation for developing a structured testing approach for IPC  middleware. Section 1.2 defines the main objectives of the thesis, and Section 1.3 provides an overview of its structure.
 
 \subsection{Motivation}
 
-In modern software engineering, distributed systems have become very important due to their capability to handle large amounts of data efficiently and reliably. Middleware solutions, like the \textit{enhanced Communication Abstraction Layer} (eCAL), play an important role because they enable different software processes to exchange data and communicate with each other across multiple computing nodes \cite{ecal_github}.
-\\
-\\
-Reliability and correctness of these middleware solutions are especially important in areas such as automotive, robotics, and the Industrial Internet of Things (IIoT). Failures in communication could cause system breakdowns and significant safety risks, particularly in applications where real-time processing is essential \cite{coulouris2012}. Therefore, it is critical to develop comprehensive testing strategies to ensure middleware solutions such as eCAL operate correctly and safely.
-\\
-\\
-Currently, eCAL does not have a standardized approach for system-wide testing. Although individual parts of eCAL are tested through unit tests, these do not fully cover complex distributed scenarios and real communication patterns \cite{ecal_github}.
-\\
-\\
-Other middleware technologies, such as the Robot Operating System (ROS) and the Data Distribution Service (DDS), are architecturally different and offer dedicated testing mechanisms. For instance, ROS 2 includes the \newline \texttt{launch\_testing} framework, which supports integration testing of distributed nodes \cite{ros2_launch_testing}. DDS implementations like eProsima Fast DDS and RTI Connext DDS also provide testing tools and built-in monitoring capabilities \cite{eprosima_fast_dds, rti_connext_dds}. However, these solutions are tightly coupled with their own architectures, making their testing strategies difficult to directly adopt for eCAL.
+Inter-process communication (IPC) middleware plays a critical role in modern distributed systems. It enables software components (often running on different machines) to exchange data efficiently, coordinate actions, and maintain system coherence. This is especially important in domains such as robotics, automotive systems, and the Industrial Internet of Things (IIoT), where real-time requirements and fault tolerance are essential \cite{coulouris2012}.
 
-The creation of a test framework specifically for eCAL is therefore essential. Such a framework can significantly improve the quality and reliability of applications that depend on eCAL, especially for safety-critical use cases.
+\vspace{1em}
+Despite the increasing reliance on IPC middleware, systematic and reusable testing concepts for these technologies are still lacking in many projects. While unit tests verify individual components in isolation, they are not sufficient for ensuring the correctness of interactions between distributed nodes, especially in failure-prone or time-sensitive environments.
+
+\vspace{1em}
+Middleware frameworks such as ROS 2 and DDS have introduced their own tools and mechanisms to support system-level validation e.g., in ROS 2  \texttt{launch\_testing} \cite{ros2_launch_testing}, or monitoring utilities in DDS implementations like eProsima Fast DDS and RTI Connext DDS \cite{eprosima_fast_dds, rti_connext_dds}. However, these approaches are often tightly coupled to the specifics of the respective middleware architectures and cannot be directly transferred to other systems.
+
+\vspace{1em}
+The enhanced Communication Abstraction Layer (eCAL) is a IPC framework designed for fast, scalable communication across processes and hosts \cite{ecal_github}. Although it provides a flexible communication model, eCAL currently lacks a standardized strategy for testing at the system level. While some components are covered by unit or functional tests, there is no unified infrastructure for evaluating end-to-end communication, message integrity under stress, or failure handling in realistic scenarios.
+
+\vspace{1em}
+This thesis addresses that gap by developing a generic testing concept for IPC middleware and applying it concretely to the case of eCAL.
 
 \subsection{Objective}
 
-This thesis aims to develop and evaluate a dedicated system testing framework for eCAL-based IPC systems. The primary objectives are:
+The goal of this thesis is to develop and evaluate a testing concept that enables structured and automated validation of inter-process communication (IPC) middleware. A particular focus lies on the design of a reusable system-level testing methodology that can be adapted to different middleware architectures. As a practical example, the concept will be implemented and demonstrated using the eCAL framework.
+
+\vspace{1em}
+The core objectives are:
 
 \begin{itemize}
-	\item Design a structured approach for conducting system tests specific to eCAL.
-	\item Implement the testing framework and assess its effectiveness in real-world scenarios.
-	\item Explore integration possibilities with continuous integration and continuous deployment (CI/CD) pipelines to facilitate automated testing and early fault detection.
+	\item Design a structured testing approach for conducting system tests of IPC middleware in distributed environments.
+	\item Investigate suitable tools, frameworks, and technologies for implementing automated tests.
+	\item Apply the developed testing concept to eCAL and validate its applicability through representative test scenarios.
 \end{itemize}
 
 \subsection{Outline}
@@ -35,13 +39,13 @@ This thesis aims to develop and evaluate a dedicated system testing framework fo
 The structure of this thesis is as follows:
 
 \begin{itemize}
-	\item \textbf{Chapter 2: Theoretical Foundations} – Provides an overview of IPC principles, details the eCAL framework, and reviews existing testing methodologies.
-	\item \textbf{Chapter 3: Framework Design} – Discusses the requirements and design considerations for the proposed testing framework.
-	\item \textbf{Chapter 4: Implementation} – Details the development of test cases, simulation environments, and strategies for testing common failure scenarios.
-	\item \textbf{Chapter 5: CI/CD Integration} – Explores the integration of the testing framework into CI/CD pipelines to enable automated testing.
-	\item \textbf{Chapter 6: Evaluation} – Analyzes the framework's performance, including test coverage and execution efficiency.
-	\item \textbf{Chapter 7: Conclusion and Future Work} – Summarizes the findings and suggests directions for future research.
+	\item \textbf{Chapter 2: Theoretical Foundations} –  Introduces testing principles and discusses core concepts of inter-process communication and middleware.
+	\item \textbf{Chapter 3: Test Requirements for IPC Middleware} – Identifies key requirements for a testing strategy in IPC systems.
+	\item \textbf{Chapter 4: Tool Evaluation and Framework Selection} – Evaluates potential tools and frameworks for implementing the test system.
+	\item \textbf{Chapter 5: Design and Execution of Tests} – Describes the test architecture and implementation of selected test cases.
+	\item \textbf{Chapter 6: Conclusion} – Summarizes the findings.
 \end{itemize}
+
 
 
 

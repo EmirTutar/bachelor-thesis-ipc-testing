@@ -1,6 +1,6 @@
 \selectlanguage{english}
 \clearpage
-\section{Design and Execution of Tests for eCAL}
+\section{Design and Execution of Tests}
 
 This chapter describes the design and practical execution of integration tests for the eCAL (enhanced Communication Abstraction Layer) middleware. The objective is to demonstrate how automated tests can be used to verify communication behavior in distributed systems built with eCAL. To this end, a test environment was implemented that combines Robot Framework for orchestration and Docker for process isolation, reproducibility, and fault simulation.
 \\
@@ -154,7 +154,7 @@ This section presents selected integration test cases that were implemented to v
 For every test case, the objective, execution steps, and success criteria are described. In addition, code examples are provided to illustrate important implementation details, such as how publishers and subscribers are configured and how messages are processed. Each test case ends with a short evaluation, which reflects on the observed behavior and explains how the results contribute to the overall test strategy.
 
 \vspace{1em}
-\subsubsection*{Test Case 1: Basic Publisher to Subscriber Communication}
+\subsubsection{Test Case 1: Publisher to Subscriber Communication}
 
 \textbf{Objective:}
 
@@ -206,14 +206,14 @@ The subscriber callback reads the first byte of the received buffer and casts it
 \vspace{0.5em}
 
 \begin{lstlisting}[style=cppstyle, caption={Binary buffer with value 42 used by the publisher}, label={lst:basic_pub_send}, captionpos=b]
-	std::vector<unsigned char> buffer(10, 42);
-	pub.Send(buffer.data(), buffer.size());
+ std::vector<unsigned char> buffer(10, 42);
+ pub.Send(buffer.data(), buffer.size());
 \end{lstlisting}
 
 \begin{lstlisting}[style=cppstyle, caption={Extracting first byte from the received message in subscriber}, label={lst:basic_sub_receive}, captionpos=b]
-	int value = static_cast<int>(
-	static_cast<const unsigned char*>(data_.buffer)[0]
-	);
+ int value = static_cast<int>(
+ static_cast<const unsigned char*>(data_.buffer)[0]
+ );
 \end{lstlisting}
 
 \begin{lstlisting}[style=cppstyle, caption={Argument setup using TCLAP in both publisher and subscriber}, label={lst:tclap_basic}, captionpos=b]
@@ -246,7 +246,7 @@ This basic test confirms that eCAL reliably delivers messages across all support
 
 \vspace{1em}
 \vspace{1em}
-\subsubsection*{Test Case 2: Multiple Publishers and Multiple Subscribers on One Topic}
+\subsubsection{Test Case 2: Multiple Publishers and Subscribers}
 
 \textbf{Objective:}
 
@@ -320,7 +320,7 @@ By implementing N:N tests across all five eCAL transport modes (\texttt{local\_s
 
 \vspace{1em}
 \vspace{1em}
-\subsubsection*{Test Case 3: Publisher Crash During Transmission}
+\subsubsection{Test Case 3: Publisher Crash During Transmission}
 
 \textbf{Objective:} 
 
@@ -406,7 +406,7 @@ This test demonstrates that eCAL remains fully functional and continues to deliv
 The use of a crash publisher simulates real-world process failures, and the test verifies that message delivery remains uninterrupted. By comparing the message counts, the system ensures that no "phantom" messages are received after the crash point. This approach can be used as a template for testing fault tolerance in distributed IPC systems.
 
 \vspace{1em}
-\subsubsection*{Test Case 4: Subscriber Crash During Reception}
+\subsubsection{Test Case 4: Subscriber Crash During Reception}
 
 \textbf{Objective:} \\
 Verify that the communication remains stable even when one subscriber crashes while receiving large messages.
@@ -499,14 +499,127 @@ In conclusion, this test underscores both the reliability of eCAL in standard SH
 \newpage
 
 \vspace{1em}
-\subsubsection*{Test Case 5: Network Failure Simulation}
+\subsubsection{Test Case 5: Network Failure Simulation}
 
-TODO
+\textbf{Objective:}
+
+\vspace{0.4em}
+Verify that after a simulated network failure, a new local UDP publisher can be successfully launched and establish communication with a running local UDP subscriber. This simulates a scenario where a redundant or backup component becomes active only after failure detection.
+
+\vspace{0.5em}
+\textbf{Execution:}
+\begin{itemize}
+	\item \textbf{Phase 1:} A local UDP publisher (\texttt{local\_publisher\_1}) and a subscriber run in the same container. The publisher sends payloads with value 42.
+	\item \textbf{Phase 2:} A network UDP publisher (\texttt{network\_publisher}) runs in a separate container and sends payloads with value 43.
+	\item \textbf{Phase 3:} After 7 seconds, the \texttt{network\_publisher} container is disconnected from the Docker network to simulate a network cable unplug.
+	\item \textbf{Phase 4:} A second local UDP publisher (\texttt{local\_publisher\_2}) is started within the original container after a short delay. It sends payloads with value 44.
+	\item The subscriber logs received values and verifies all expected transitions.
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Success Criteria:}
+\begin{itemize}
+	\item Subscriber receives:
+	\begin{itemize}
+		\item All sent messages with value 42 (from local\_publisher\_1).
+		\item At least 2 messages with value 43 (before network disconnection).
+		\item All sent messages with value 44 (from local\_publisher\_2 after crash).
+	\end{itemize}
+	\item No communication deadlocks or crashes occur.
+	\item Subscriber process exits with code \texttt{0}.
+\end{itemize}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{@{}llll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Role} & \textbf{Transport Mode} & \textbf{Payload} \\
+		\midrule
+		local\_publisher\_1 & Initial Local Publisher & local\_udp & \texttt{0x2A} (42) \\
+		network\_publisher & Network Publisher & network\_udp & \texttt{0x2B} (43) \\
+		local\_publisher\_2 & Delayed Local Publisher & local\_udp & \texttt{0x2C} (44) \\
+		subscriber & Receiver & local\_udp & 42, 43, 44 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Configuration for extended Network Failure Simulation}
+	\label{tab:network_failure_sim_44}
+\end{table}
+
+\vspace{0.4em}
+\textbf{Code Examples:}
+
+\vspace{0.4em}
+All publishers follow the same sending logic (Listing~\ref{lst:pubsendlogic44}) but use different payload values.
+
+\begin{lstlisting}[style=cppstyle, caption={General publisher loop}, label={lst:pubsendlogic44}, captionpos=b]
+ std::vector<unsigned char> buffer(10, payload); 
+ // e.g. 42, 43, or 44
+  for (int i = 0; i < count; ++i){
+   pub.Send(buffer.data(), buffer.size());
+   sleep_for(std::chrono::milliseconds(delay));
+  }
+\end{lstlisting}
+
+\vspace{0.4em}
+The new publisher \texttt{local\_udp\_pub\_2} uses payload \texttt{44} and is launched inside the same container as the subscriber (Listing~\ref{lst:entrypointlocaludp2}).
+
+\begin{lstlisting}[style=cppstyle, caption={Entrypoint launches second local publisher after delay}, label={lst:entrypointlocaludp2}, captionpos=b]
+ ./local_udp_pub --topic "$TOPIC" --name pub1_${NAME} &
+ 
+ ./network_crash_sub --topic "$TOPIC" --name sub_${NAME} &
+ SUB_PID=$!
+ 
+ sleep 8
+ ./local_udp_pub_2 --topic "$TOPIC" --name pub2_${NAME} &
+ 
+ wait $SUB_PID
+ EXIT_CODE=$?
+ exit $EXIT_CODE
+\end{lstlisting}
+
+\vspace{0.4em}
+The subscriber logs all payloads and reports a summary (Listing~\ref{lst:subscriber_check_44}).
+
+\begin{lstlisting}[style=cppstyle, caption={Subscriber validation logic for all payloads}, label={lst:subscriber_check_44}, captionpos=b]
+ int count_42 = 0;
+ int count_43 = 0;
+ int count_44 = 0;
+	
+ void OnReceive(...) {
+   int val = data_[0];
+   if (val == 42) ++count_42;
+   if (val == 43) ++count_43;
+   if (val == 44) ++count_44;
+ }
+ 
+ // checks if the amount of messages are correct
+ if (expected_42 && expected_43 && expected_44)
+   return 0;
+ else
+   return 1;
+\end{lstlisting}
+
+\vspace{1em}
+\textbf{Evaluation:}
+
+\vspace{0.4em}
+This test simulates a common failure mode in networked IPC systems: a remote communication node becomes unavailable due to a crash or disconnection. The successful delivery of messages from the locally started fallback publisher demonstrates that eCAL can recover from partial system failures and maintain local communication paths without interruption.
+
+\vspace{1em}
+The use of different payloads (42, 43 and 44) allows for precise identification of message origin. By verifying that all types were received in sufficient quantity, the test ensures that the system responded correctly to the simulated fault: it handled remote messages, then did not crash with local messages.
+
+\vspace{1em}
+From an architecture perspective, this test validates the middleware's robustness and flexibility across dynamic transport topology changes. It demonstrates that eCAL can switch between local and network transport without requiring restarts or reinitialization of the subscriber process.
+
+\vspace{1em}
+This scenario is especially relevant for distributed systems that combine in-vehicle communication (local) with cloud-connected components (network). It proves that local subsystems can continue operating even in case of external failure.
+
+\subsubsection{Test Case 6: TODO}
 
 \newpage
 \subsection{Handling of Edge Cases}
 
-In addition to testing typical communication flows, the test infrastructure also covers a variety of edge cases that may occur in distributed systems. These cases are particularly important for evaluating the robustness and fault tolerance of the eCAL middleware under non-ideal conditions.
+In addition to testing typical communication flows, the test infrastructure also covers a variety of edge cases that may occur in distributed systems. These cases are particularly important for evaluating the robustness and fault tolerance of the middleware under non-ideal conditions.
 
 \vspace{0.5em}
 The following categories of edge cases are addressed:
@@ -565,13 +678,24 @@ The simplicity and structure of this test approach makes it well suited for inte
 \vspace{0.9em}
 Furthermore, since Docker is used for test isolation, the tests are highly portable and can run in local development environments, on build servers, or in virtualized testing infrastructure with minimal setup.
 
+\newpage
 \subsection{Summary}
 
-The implementation of integration tests for eCAL showed that the combination of Docker and Robot Framework is well suited for testing inter-process communication in a modular and reproducible manner. The infrastructure allows test scenarios to be executed consistently and extended easily. Especially the ability to simulate component failures (e.g., network drop or process crash) proved to be helpful in analyzing system robustness.
+This chapter presented the design, implementation, and execution of a modular integration test system for the eCAL middleware. By combining Docker-based process isolation with the flexible automation capabilities of Robot Framework, it was possible to validate key properties of publish-subscribe communication in a controlled and reproducible environment.
 
-\vspace{0.9em}
-Basic communication patterns such as single or multiple publishers and subscribers worked reliably in all tested transport modes, including \texttt{local\_udp}, \texttt{local\_tcp}, and \texttt{network\_udp}. However, communication via \texttt{local\_shm} was not always functional in Docker containers due to the isolation between container namespaces, which limits shared memory usage. This restriction highlights an important consideration when testing IPC frameworks in containerized environments.
+\vspace{1em}
+The selected test cases focused on core functionalities such as reliable message delivery, multi-node communication, and fault tolerance under crash or failure conditions. Most scenarios were tested across all five supported eCAL transport modes, these are shared memory (SHM), UDP, and TCP in both local and network configurations. This ensured broad coverage of both common and edge-case communication patterns.
 
-\vspace{0.9em}
-The framework is already equipped to be extended with further test categories. For example, future work could include RPC-based communication, service availability tests, and metrics such as round-trip time or failure recovery time. Moreover, integration into CI/CD pipelines would enable automatic regression testing during development and deployment.
+\vspace{1em}
+Code examples demonstrated how publishers, subscribers, and test logic are implemented and configured, while structured success criteria and exit codes provided clear validation of expected behavior. The test infrastructure also proved effective in simulating failure scenarios such as process crashes and message loss, confirming the robustness and resilience of the eCAL middleware.
+
+\vspace{1em}
+A notable insight from these tests is the performance–resilience trade-off introduced by advanced features like Zero-Copy SHM. While this mode improves throughput by eliminating memory copies, it also increases inter-process coupling and may compromise fault isolation if a subscriber crashes during message access. Future deployments should carefully assess whether the performance benefits of Zero-Copy justify its potential stability risks.
+
+\vspace{1em}
+The framework is already equipped to be extended with further test categories. For example, future work could include RPC-based communication, service availability tests, and metrics such as round-trip time. Moreover, integration into CI/CD pipelines would enable automatic regression testing during development and deployment.
+
+\vspace{1em}
+In conclusion, the developed test system successfully demonstrates how integration tests can be used not only for functional verification but also to explore system behavior under realistic and adverse conditions. It provides a solid foundation for continuous validation of middleware functionality in research, development, and production contexts.
+
 
