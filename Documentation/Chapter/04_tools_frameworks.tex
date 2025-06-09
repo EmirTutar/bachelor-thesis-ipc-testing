@@ -4,6 +4,80 @@
 
 This chapter presents an evaluation of available tools and test frameworks that could be used to support the integration testing of IPC middleware. The goal is to identify solutions that align with the defined testing requirements and environmental constraints presented in the previous chapter. Based on a set of defined selection criteria, several tool candidates are reviewed and assessed in terms of their compatibility with eCAL and the specific demands of testing distributed communication systems.
 
+\subsection{eCAL as a Middleware Solution for IPC Testing}
+
+\textbf{Overview and Architecture}
+
+\vspace{0.4em}
+eCAL (enhanced Communication Abstraction Layer) is a flexible middleware designed for efficient inter-process communication (IPC). It supports various transport layers, such as shared memory for communication on a single machine, and UDP or TCP for communication over a network. eCAL automatically selects the most suitable transport method based on system conditions \cite{ecal_official_docs}.
+
+
+\vspace{1em}
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		component/.style={draw, thick, minimum width=3cm, minimum height=1cm, rounded corners=5pt, fill=blue!10},
+		arrow/.style={->, thick}
+		]
+		
+		\node[component] (pub1) at (0,2.5) {Publisher Node A};
+		\node[component] (pub2) at (-2,1) {Publisher Node B};
+		\node[component] (sub1) at (6,2.5) {Subscriber Node A};
+		\node[component] (sub2) at (8,1) {Subscriber Node B};
+		\node[component, fill=orange!15] (monitor) at (3,-1) {eCAL Monitoring Tool};
+		
+		\draw[arrow] (pub1) -- node[above] {Topic 1} (sub1);
+		\draw[arrow] (pub2) -- node[below] {Topic 2} (sub2);
+		\draw[arrow, dashed] (pub1) -- (monitor);
+		\draw[arrow, dashed] (pub2) -- (monitor);
+		\draw[arrow, dashed] (sub1) -- (monitor);
+		\draw[arrow, dashed] (sub2) -- (monitor);
+		
+		\node at (3,3.8) {\textbf{eCAL Publish-Subscribe Model}};
+	\end{tikzpicture}
+	\caption{Simplified architecture of the eCAL framework with publisher, subscriber, and monitoring components}
+	\label{fig:ecal_architecture}
+\end{figure}
+
+\newpage
+Figure~\ref{fig:ecal_architecture} shows the basic structure of the eCAL system. It includes publisher and subscriber nodes that exchange messages over topics. A built-in monitoring tool observes the communication to support debugging and system analysis.
+
+\vspace{1.2em}
+\textbf{Main Features}
+
+\vspace{0.4em}
+eCAL offers several features that are useful for real-time and distributed systems:
+
+\begin{itemize}
+	\item \textbf{High Performance:} Thanks to zero-copy in shared memory mode, eCAL can transmit data with very low latency and high throughput~\cite{ecal_github,ecal_official_docs}.
+	
+	\item \textbf{Multi-Language Support:} It provides APIs for C++, C\#, Python, Java, and Go, which makes it easy to use in different projects~\cite{ecal_official_docs}.
+	
+	\item \textbf{Cross-Platform Support:} eCAL works on Windows, Linux, and macOS, making it suitable for many system environments~\cite{ecal_official_docs}.
+	
+	\item \textbf{Integrated Tools:} eCAL includes tools for monitoring, recording, replaying, and analyzing communication, which are helpful during development and testing~\cite{ecal_github,ecal_official_docs}.
+\end{itemize}
+
+\textbf{Typical Applications}
+
+\vspace{0.4em}
+Because of its efficiency and reliability, eCAL is used in fields like automotive, robotics, and industrial automation. In automotive projects, for example, it supports functions such as advanced driver assistance systems (ADAS) and autonomous driving. Robotics applications benefit from fast data exchange between sensors and control modules. In industrial environments, eCAL connects multiple devices and systems efficiently.
+
+\vspace{1.2em}
+\textbf{Benefits and Challenges of Middleware}
+
+\vspace{0.4em}
+Middleware like eCAL helps to manage communication between software modules in a structured way. It reduces the need to handle low-level networking code and allows systems to scale more easily \cite{josuttis2007, coulouris2012}. On the other hand, middleware adds complexity and can make debugging and performance tuning more difficult. Especially in real-time systems, the overhead from abstraction can become a limitation.
+
+\newpage
+\textbf{Limitations of Current Testing Approaches}
+
+\vspace{0.4em}
+Although eCAL includes helpful tools for monitoring and debugging, it does not offer a standard solution for full system testing. Most available tools are made for developers and focus on individual components, not on testing complete communication chains.
+
+\vspace{1em}
+Testing distributed behavior such as message delays, node crashes, or inconsistent timing requires additional scripts or external tools. Also, because eCAL supports different transport layers (e.g., shared memory, UDP, TCP), it is hard to compare performance across configurations without dedicated test automation.
+
 \subsection{Selection Criteria}
 
 To choose suitable testing tools and frameworks, several criteria were defined:

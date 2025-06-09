@@ -18,8 +18,10 @@
 \usepackage{listings,xcolor}
 \usepackage[table]{xcolor}
 \usepackage{caption}
+\usepackage{tocloft}
 \usepackage{tikz}
 \usepackage{float}
+\usepackage{etoolbox}
 \usepackage[acronym]{glossaries}
 \makeglossaries
 \addbibresource{sample.bib}
@@ -50,7 +52,6 @@
 	frame=single,
 	rulecolor=\color{black}
 }
-
 
 \begin{document}
 \selectlanguage{english}
@@ -142,6 +143,24 @@
 \textbf{To this end, established testing methodologies including integration, and system-level tests are analyzed and adapted for distributed IPC systems. The emphasis is placed on creating maintainable and reusable test structures that support long-term system evolution. The developed concepts will be demonstrated and evaluated using a practical implementation, ensuring their applicability to real-world middleware systems.}
 
 \pagebreak
+% Abstand
+\setlength{\cftbeforesecskip}{10pt}
+\setlength{\cftbeforesubsecskip}{6pt}
+\setlength{\cftbeforesubsubsecskip}{2pt}
+
+% Einrückung & Breite
+\setlength{\cftsecindent}{0pt}
+\setlength{\cftsubsecindent}{20pt}
+\setlength{\cftsubsubsecindent}{40pt}
+
+% Schriftarten
+\renewcommand{\cftsecfont}{\normalsize\bfseries}
+\renewcommand{\cftsubsecfont}{\normalsize}
+\renewcommand{\cftsubsubsecfont}{\small}
+
+\renewcommand{\cftsecpagefont}{\bfseries}
+\renewcommand{\cftsubsecpagefont}{\normalfont}
+\renewcommand{\cftsubsubsecpagefont}{\normalfont}
 \tableofcontents
 \pagebreak
 
