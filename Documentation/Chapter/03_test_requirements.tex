@@ -4,7 +4,10 @@
 
 \section{Test Requirements for IPC Middleware}
 
-This chapter defines the requirements for integration testing in the context of IPC middleware and proposes a structured test strategy. The aim is to address communication-specific challenges such as message loss, timing behavior, and interaction between distributed components. Based on these requirements, a modular and reusable test architecture is designed, serving as the foundation for the implementation and evaluation in later chapters.
+The previous chapter explained the main concepts related to software testing, distributed systems, inter-process communication (IPC), and middleware. It also presented common middleware frameworks and discussed their differences and challenges in testing.
+
+\vspace{1em}
+To develop a structured and practical testing approach, it is important to clearly define what needs to be tested. The next chapter describes the specific requirements for testing IPC middleware. These requirements include functional aspects, such as correct message delivery, and non-functional aspects, such as timing and robustness. They form the foundation for designing a reusable and automated test system, which will be applied to eCAL in the later parts of this thesis.
 
 \subsection{Analysis of Test Requirements}
 
@@ -17,13 +20,9 @@ Middleware-based systems pose unique testing requirements that differ from class
 	
 	\item \textbf{Component coordination:} Integration tests must ensure that multiple processes synchronize correctly. This includes proper startup/shutdown sequences and fault handling.
 	
-	\item \textbf{Fault Injection:} To evaluate the system’s robustness, integration tests should include controlled fault scenarios. These may involve simulating message loss, injection of delays, disabling specific network routes, or forcing a publisher to stop sending data during transmission. Such tests help verify how well the middleware handles unexpected problems and maintains stable communication.
-	
-	\item \textbf{Transport abstraction:} Middleware like eCAL supports different transport mechanisms (e.g. TCP, shared memory, UDP). Integration tests should verify that core functionality works across transports.
+	\item \textbf{Fault Injection:} To evaluate the system’s robustness, integration tests should include controlled fault scenarios. These may involve simulating message loss, disabling specific network routes, or forcing a publisher to stop sending data during transmission. Such tests help verify how well the middleware handles unexpected problems.
+	\item \textbf{Transport abstraction:} Middleware supports different transport mechanisms (e.g. TCP, shared memory, UDP). Integration tests should verify that core functionality works across transports.
 \end{itemize}
-
-
-\newpage
 
 \subsection{Functional and Non-Functional Test Objectives}
 
