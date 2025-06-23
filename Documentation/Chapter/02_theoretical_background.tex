@@ -131,7 +131,7 @@ As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the princ
 A distributed system is a network of independent computers that appears to users as a single coherent system. In distributed systems, multiple computing devices communicate and coordinate their activities by passing messages to achieve a common goal \cite{tanenbaum2017}. Such systems consist of independent components located on different networked computers, which interact with each other by exchanging messages.
 
 \vspace{1em}
-The primary goal of distributed systems is to share resources, increase performance, and provide reliable and fault-tolerant operations. Resources such as processing power, memory, storage, and data can be shared between multiple nodes within the system, enhancing system efficiency and scalability \cite{coulouris2012}.
+The primary goals of distributed systems include improving performance, supporting scalability, and provide reliable and fault-tolerant operations. By coordinating tasks across multiple nodes, such systems can make more efficient use of available processing power, memory, and data storage \cite{coulouris2012}.
 
 \vspace{1em}
 Figure~\ref{fig:distributed_architecture} illustrates a basic distributed system consisting of multiple independent nodes communicating over a network. Each node may serve a specific role, such as providing services, accessing shared resources, or coordinating tasks.
@@ -140,39 +140,39 @@ Figure~\ref{fig:distributed_architecture} illustrates a basic distributed system
 	\centering
 	\begin{tikzpicture}[
 		node/.style={draw, thick, minimum width=2.8cm, minimum height=1cm, rounded corners=5pt, fill=blue!10},
-		conn/.style={->, thick},
-		network/.style={draw, fill=gray!10, rounded corners=2pt}
+		conn/.style={<->, thick},
+		network/.style={draw, fill=gray!10, rounded corners=2pt, minimum width=3cm, minimum height=1cm}
 		]
 		
-		% Nodes
-		\node[node] (client1) at (-4, 2) {Client Node A};
-		\node[node] (client2) at (4, 2) {Client Node B};
-		\node[node] (server1) at (-2, 0) {Service Node A};
-		\node[node] (server2) at (2, 0) {Service Node B};
+		% Network in center
+		\node[network] (network) at (0,0) {Network};
 		
-		% Network Cloud
-		\node[network, minimum width=5cm, minimum height=1.2cm] (network) at (0,-2) {Network};
+		% Nodes around network
+		\node[node] (clientA) at (-4,2) {Client Node A};
+		\node[node] (clientB) at (4,2) {Client Node B};
+		\node[node] (serviceA) at (-4,-2) {Service Node A};
+		\node[node] (serviceB) at (4,-2) {Service Node B};
 		
-		% Arrows from Clients to Services
-		\draw[conn] (client1) -- (server1);
-		\draw[conn] (client2) -- (server2);
-		
-		% Arrows from Services to Network
-		\draw[conn] (server1) -- (network);
-		\draw[conn] (server2) -- (network);
-		
+		% Connections
+		\draw[conn] (clientA) -- (network);
+		\draw[conn] (clientB) -- (network);
+		\draw[conn] (serviceA) -- (network);
+		\draw[conn] (serviceB) -- (network);
 	\end{tikzpicture}
-	\caption{Basic architecture of a distributed system with multiple clients and services connected through a network}
+	\caption{Basic architecture of a distributed system with multiple nodes communicating via a central network}
 	\label{fig:distributed_architecture}
 \end{figure}
 
 
-\subsubsection{Characteristics and Challenges}
+\subsubsection{Characteristics, Benefits, and Challenges}
 
 Distributed systems have several key characteristics, including concurrency, scalability, transparency, and fault tolerance. Concurrency refers to multiple processes executing simultaneously. Scalability describes the capability of the system to grow easily in size and workload. Transparency ensures the complexity of the system remains hidden from users, providing an impression of a single unified system. Fault tolerance describes the system's capability to continue operation even when individual components fail \cite{tanenbaum2017}.
 
 \vspace{1em}
 However, developing and managing distributed systems can be challenging. Problems related to communication delays, synchronization between processes, security, and managing the complexity of the overall system must be addressed effectively to ensure reliable operations \cite{coulouris2012}.
+
+\vspace{1em}
+Despite these challenges, distributed systems offer several practical advantages that make them well suited for modern computing environments. One of the most important benefits is resource utilization: tasks can be divided among multiple machines, leading to better performance and efficiency. Additionally, scalability allows systems to grow by simply adding new nodes, without the need to redesign the entire architecture. Distributed systems also support high availability, as the failure of a single component does not necessarily affect the rest of the system. This improves fault tolerance and makes distributed architectures ideal for applications where continuous operation is critical. Finally, they enable geographic distribution, allowing systems to operate across locations and support global access to data and services \cite{tanenbaum2017,coulouris2012}.
 
 \subsubsection{Application Areas}
 
@@ -189,6 +189,9 @@ Inter-process communication (IPC) refers to mechanisms that allow processes to c
 \subsubsection{Common IPC Mechanisms}
 
 There are several commonly used IPC mechanisms, each suitable for different scenarios and requirements. The most frequently used methods include shared memory, message passing, and remote procedure calls \cite{stallings2018,tanenbaum2015}.
+
+\vspace{1em}
+Figure~\ref{fig:ipc_methods} illustrates a simplified comparison of common IPC mechanisms. Shared memory allows processes to access a common memory region directly. Message passing transfers data through explicit send/receive actions. RPC abstracts communication by allowing a process to call functions in another process as if they were local.
 
 \vspace{1em}
 \begin{figure}[H]
@@ -225,11 +228,6 @@ There are several commonly used IPC mechanisms, each suitable for different scen
 	\label{fig:ipc_methods}
 \end{figure}
 
-
-\vspace{1em}
-\newpage
-Figure~\ref{fig:ipc_methods} illustrates a simplified comparison of common IPC mechanisms. Shared memory allows processes to access a common memory region directly. Message passing transfers data through explicit send/receive actions. RPC abstracts communication by allowing a process to call functions in another process as if they were local.
-
 \vspace{1em}
 \textbf{Shared Memory:}
 
@@ -242,6 +240,7 @@ Shared memory is one of the fastest IPC methods, allowing processes to communica
 Message passing involves processes communicating through messages. This approach ensures a clear separation between processes, providing safer communication. Messages are sent explicitly from one process to another using defined communication channels, such as pipes or sockets. While message passing typically has higher overhead compared to shared memory, it is easier to manage synchronization, and it allows better scalability in distributed environments \cite{tanenbaum2015}.
 
 \vspace{1em}
+\newpage
 \textbf{Remote Procedure Calls (RPC):}
 
 \vspace{0.4em}
@@ -261,6 +260,8 @@ While IPC mechanisms define how processes communicate, middleware abstract these
 
 Middleware is software that sits between applications and the underlying operating system or network infrastructure, enabling easier communication and coordination within distributed systems. Its main role is to simplify development by abstracting complexities associated with networked and distributed computing, such as communication protocols, data exchange, and interoperability between diverse systems \cite{bernstein1996}. Middleware allows software developers to focus more on the application logic rather than the low-level communication and network details.
 
+
+\newpage
 \subsubsection{Common Middleware Solutions}
 
 Various middleware technologies are available today, each designed to address specific communication and coordination needs. Some widely used middleware solutions include the Robot Operating System (ROS) \cite{quigley2009}, the Data Distribution Service (DDS) \cite{pardo2003}, and the enhanced Communication Abstraction Layer (eCAL) \cite{ecal_official_docs}.
@@ -270,27 +271,43 @@ Table~\ref{tab:middleware_comparison} presents a layered architecture comparison
 
 \begin{table}[H]
 	\centering
-	\renewcommand{\arraystretch}{1.20}
-	\begin{tabular}{|p{2.25cm}|p{3.22cm}|p{3.22cm}|p{3.22cm}|}
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{|p{7cm}|c|c|c|}
 		\hline
-		\textbf{Layer} & \textbf{ROS} & \textbf{DDS} & \textbf{eCAL} \\
+		\textbf{Feature} & \textbf{ROS} & \textbf{DDS} & \textbf{eCAL} \\
 		\hline
-		Application Layer & User Applications & User Applications & User Applications \\
+		Open Source & \cmark & \xmark & \cmark \\
 		\hline
-		Middleware API & rospy, roscpp & DDS API & eCAL API (C++, Python, etc.) \\
+		Multi-Platform (Linux, Windows) & \cmark & \cmark & \cmark \\
 		\hline
-		Core-Components & ROS-Master, Topics, Services & RTPS Protocol & Pub/Sub, RPC \\
+		Publish/Subscribe Model & \cmark & \cmark & \cmark \\
 		\hline
-		Transport Layer & TCP-ROS, UDP-ROS & UDP/IP & Shared-Memory, UDP, TCP \\
+		Request/Response (RPC) & \cmark & \cmark & \cmark \\
 		\hline
-		Operating System & Linux, Windows, macOS & OS-dependent & Linux, Windows, macOS \\
+		Real-Time Support & \xmark & \cmark & \xmark \\
+		\hline
+		Shared Memory Support & \xmark & \xmark & \cmark \\
+		\hline
+		TCP Support & \cmark & \cmark & \cmark \\
+		\hline
+		UDP Support & \cmark & \cmark & \cmark \\
+		\hline
+		Real-Time-Pub-Sub Protocol (RTPS) & \xmark & \cmark & \xmark \\
+		\hline
+		Integrated Dev Tools & \cmark & \xmark & \xmark \\
+		\hline
+		Built-in Visualization & \cmark & \xmark & \xmark \\
 		\hline
 	\end{tabular}
-	\caption{Architecture comparison between ROS, DDS, and eCAL middleware}
+	\caption{Feature comparison of ROS, DDS, and eCAL.}
 	\label{tab:middleware_comparison}
 \end{table}
 
 \vspace{1em}
+The comparison in Table~\ref{tab:middleware_comparison} illustrates that while all three middleware frameworks support basic communication patterns like publish-subscribe and RPC, their strengths vary depending on the intended application domain. ROS excels in developer support and tooling, DDS offers real-time capabilities and strict QoS control, and eCAL stands out with fast and efficient IPC and shared memory support.
+
+\vspace{1em}
+\newpage
 \textbf{Robot Operating System (ROS):}
 \vspace{0.4em}
 
@@ -335,3 +352,61 @@ Best practices include the use of simulation environments for performance evalua
 
 \vspace{1em}
 In addition, techniques such as fault injection or failure simulation are particularly valuable when testing distributed middleware. These methods deliberately introduce faults such as: process termination, artificial network loss, or resource exhaustion. These observe how the system responds under edge cases. For containerized systems, this can be achieved through controlled Docker container crashes or simulated network partitions. Such tests are essential to verify the middleware's robustness and fault tolerance under realistic failure scenarios.
+
+\subsubsection{Comparison of Middleware Testing}
+
+To evaluate the practical suitability of different middleware frameworks for testing, it is important to compare their support for common testing methods and tools. While all frameworks follow a publish-subscribe architecture and support integration testing in some form, their features differ significantly in terms of system-level support, real-time validation, simulation tools, and fault injection capabilities \cite{gorton2006software, burns2009real}.
+
+\vspace{1em}
+The following list summarizes the most relevant testing aspects and how they are supported by ROS, DDS, and eCAL:
+
+\begin{itemize}
+	\item \textbf{Integration Testing}
+	\begin{itemize}
+		\item \textbf{ROS:} Supports structured integration tests, especially in ROS 2 using \texttt{launch\_testing} to coordinate multi-node setups \cite{ros2_launch_testing}.
+		\item \textbf{DDS:} Enables integration testing via its standardized API; test setups are typically built manually per implementation \cite{pardo2003}.
+		\item \textbf{eCAL:} Currently, eCAL does not offer dedicated support for automated integration testing \cite{ecal_official_docs}.
+	\end{itemize}
+	
+	\item \textbf{System-Level Testing}
+	\begin{itemize}
+		\item \textbf{ROS:} ROS 2 includes tools like \texttt{launch\_testing} for end-to-end validation of system behavior and topic exchange \cite{ros2_launch_testing}.
+		\item \textbf{DDS:} No native system test runner; system-level validation requires custom frameworks \cite{rti_connext_dds}.
+		\item \textbf{eCAL:} No native system test runner available \cite{ecal_official_docs}.
+	\end{itemize}
+	
+	\item \textbf{Fault Injection}
+	\begin{itemize}
+		\item \textbf{ROS:} Faults can be simulated by terminating nodes or using simulation tools like Gazebo \cite{quigley2009}.
+		\item \textbf{DDS:} Supports disconnects, dropped messages, or QoS manipulation; commercial tools (e.g., RTI Connext) may offer advanced options \cite{rti_connext_dds}.
+		\item \textbf{eCAL:} No built-in support for fault injection exists \cite{ecal_official_docs}. This thesis explores basic fault scenarios using Docker, such as process crashes or network interruptions.
+	\end{itemize}
+	
+	\newpage
+	\item \textbf{Quality-of-Service (QoS) Testing}
+	\begin{itemize}
+		\item \textbf{ROS:} ROS 2 allows limited QoS testing through its DDS layer; ROS 1 does not support QoS configuration \cite{ros2_launch_testing}.
+		\item \textbf{DDS:} Offers comprehensive QoS testing across multiple dimensions (e.g., reliability, deadline, liveliness) \cite{pardo2003}.
+		\item \textbf{eCAL:} Offers only basic pub/sub configuration; no standardized QoS model is provided \cite{ecal_official_docs}.
+	\end{itemize}
+	
+	\item \textbf{Monitoring and Logging}
+	\begin{itemize}
+		\item \textbf{ROS:} Tools like \texttt{rosbag}, \texttt{rosnode}, and \texttt{rostopic} provide strong monitoring and logging capabilities \cite{quigley2009}.
+		\item \textbf{DDS:} Vendor-specific tools such as RTI Admin Console and Fast DDS Monitor allow inspection and statistics collection \cite{rti_connext_dds, eprosima_fast_dds}.
+		\item \textbf{eCAL:} Built-in tools such as eCAL Monitor and the logging API provide basic runtime analysis \cite{ecal_official_docs}.
+	\end{itemize}
+	
+	\item \textbf{Simulation Support}
+	\begin{itemize}
+		\item \textbf{ROS:} Integrates tightly with simulation environments like Gazebo and Ignition, allowing scenario-based testing \cite{quigley2009}.
+		\item \textbf{DDS:} No native simulation environment is provided, but integration with external simulators is possible \cite{rti_connext_dds}.
+		\item \textbf{eCAL:} Provides recording and replay functionality for data exchange but no virtual simulation of sensor behavior \cite{ecal_official_docs}.
+	\end{itemize}
+\end{itemize}
+
+\vspace{0.5em}
+
+This comparison shows that ROS provides strong tooling for development and simulation-based testing, while DDS offers the most comprehensive support for Quality-of-Service validation. In contrast, eCAL does not natively support automated system-level testing or fault injection \cite{ecal_official_docs}. However, this thesis introduces a new testing approach later based on Robot Framework and containerized environments to address this gap \cite{RobotFrameworkDocs}.
+
+
