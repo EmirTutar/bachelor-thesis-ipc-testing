@@ -1,6 +1,6 @@
 \selectlanguage{english}
 \clearpage
-\section{Design and Execution of Tests}
+\section{Design and Automation of Tests}
 
 This chapter describes the design and practical execution of integration tests for the eCAL (enhanced Communication Abstraction Layer) middleware. The objective is to demonstrate how automated tests can be used to verify communication behavior in distributed systems built with eCAL. To this end, a test environment was implemented that combines Robot Framework for orchestration and Docker for process isolation, reproducibility, and fault simulation.
 \\
@@ -654,29 +654,103 @@ This structured approach to handling edge cases ensures that both functional cor
 
 \subsection{Automation and Repeatability}
 
-One of the main goals of the integration test design is to ensure that all tests can be executed in a fully automated and repeatable way. Automation is essential for running regression tests frequently and reliably—especially when integrating the tests into CI/CD pipelines.
+A key objective of the integration test design is to ensure that all tests can be executed in a fully automated and repeatable manner. Automation is important for enabling reliable regression testing, especially in the context of continuous integration and deployment (CI/CD).
 
 \vspace{0.9em}
-The tests are executed using Robot Framework and can be triggered with a single command:
+In this project, the test cases are implemented using the Robot Framework and can be executed with a single command:
 
 \begin{verbatim}
 	robot --outputdir results network_crash.robot
 \end{verbatim}
 
 \vspace{0.5em}
-This command runs the specified test and stores the output files in the \texttt{results} directory. The following artifacts are automatically generated after each run:
+This command runs the specified test and stores all result files in the \texttt{results} directory. The following artifacts are automatically generated after each run:
 
 \begin{itemize}
-	\item \textbf{log.html} – Detailed step-by-step execution log with console output
-	\item \textbf{report.html} – Summary report with pass/fail statistics
-	\item \textbf{output.xml} – Raw result data (used for machine-readable processing or CI systems)
+	\item \textbf{log.html} – A detailed execution log, including all console output
+	\item \textbf{report.html} – A summary report presenting the test results in a structured format
+	\item \textbf{output.xml} – A machine-readable file with raw test data for further processing or CI integration
+\end{itemize}
+
+\vspace{0.9em}
+To ensure automated and consistent test execution, the framework is fully integrated into GitHub Actions. This platform offers native support for defining CI workflows directly in the repository using YAML configuration files. The integration allows tests to be triggered automatically in the following scenarios:
+
+\begin{itemize}
+	\item After each push to the main repository (continuous integration)
+	\item Manually via the GitHub Actions web interface
 \end{itemize}
 
 \vspace{0.5em}
-The simplicity and structure of this test approach makes it well suited for integration into CI/CD systems such as GitHub Actions or GitLab CI. These systems can be configured to run the test suite automatically after every commit or pull request, ensuring that communication functionality remains stable even during ongoing development.
+Test results are stored and deployed via GitHub Pages, enabling direct access to all test reports through a structured web interface. Each test run is timestamped and, if available, linked to the triggering commit, ensuring traceability across test history.
+
+\vspace{0.5em}
+The overall interaction between the main repository and the test framework is illustrated in the following diagram:
+
+\vspace{1em}
+\begin{center}
+	\begin{tikzpicture}[
+		node distance=1.8cm and 3cm,
+		repo/.style={rectangle, draw=blue!60, fill=blue!10, very thick, minimum width=3cm, minimum height=1cm},
+		action/.style={rectangle, draw=gray!80, fill=gray!20, minimum width=3.8cm, text width=3.5cm, align=center},
+		arrow/.style={->, thick},
+		status/.style={rectangle, draw=green!50!black, fill=green!10, minimum width=3.8cm, text width=3.5cm, align=center},
+		web/.style={rectangle, draw=orange!80!black, fill=orange!10, minimum width=3.8cm, text width=3.5cm, align=center}
+		]
+		
+		\node[repo] (repo1) {eCAL Repository};
+		\node[action, below=of repo1] (trigger) {Trigger: On Push to master};
+		\node[action, below=of trigger] (dispatch) {repository\_dispatch to Tests};
+		
+		\node[repo, right=5.5cm of repo1] (repo2) {eCAL Tests Repository};
+		\node[action, below=of repo2] (ci) {CI Run: Docker + Robot Framework};
+		\node[web, below=of ci] (pages) {Reports deploy to GitHub Pages};
+		
+		\node[status, left=0.8cm of repo2] (feedback) {Status back to eCAL\\(success/failure)};
+		
+		\draw[arrow] (repo1) -- (trigger);
+		\draw[arrow] (trigger) -- (dispatch);
+		\draw[arrow] (dispatch) -- (repo2);
+		\draw[arrow] (repo2) -- (ci);
+		\draw[arrow] (ci) -- (pages);
+		\draw[arrow] (ci.west) -- (feedback.east);
+		\draw[arrow] (feedback) -- (repo1);
+		
+	\end{tikzpicture}
+\end{center}
+\vspace{1em}
+
+This architecture ensures that integration tests are decoupled from the main development repository, yet fully synchronized through GitHub's event-based automation mechanisms. Status feedback, report visibility, and reproducibility are guaranteed at every stage of the workflow.
 
 \vspace{0.9em}
-Furthermore, since Docker is used for test isolation, the tests are highly portable and can run in local development environments, on build servers, or in virtualized testing infrastructure with minimal setup.
+In addition, the use of Docker for test isolation ensures high portability and reproducibility. Tests can be executed in local development environments, on cloud-based runners, or within virtualized test infrastructure—independent of the host system configuration. This improves consistency across different environments and reduces the likelihood of platform-specific errors.
+
+\clearpage
+\subsection{Visualization of Test Results}
+
+The successful automation of integration tests is only effective if test results can be accessed, interpreted, and compared efficiently. Therefore, this project includes a visual reporting system that makes all results available via the browser.
+
+\vspace{0.9em}
+After each test execution, GitHub Actions deploys the generated reports to the \textbf{GitHub Pages} section of the test repository. The following figure shows the structured web interface, where all test runs are listed by timestamp. If available, the commit hash that triggered the test run is also displayed for traceability.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Images/github_pages_overview.png}
+	\caption{Test report overview hosted on GitHub Pages}
+	\label{fig:gh_pages_overview}
+\end{figure}
+
+\vspace{0.5em}
+Clicking on a specific test entry opens the detailed Robot Framework report. This report contains structured sections with statistics, test case results, execution logs, and console output. The clear layout enables quick identification of failed tests and debugging of communication problems.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{Images/robot_report_example.png}
+	\caption{Detailed Robot Framework report for a test run}
+	\label{fig:robot_report}
+\end{figure}
+
+\vspace{0.5em}
+This visualization not only improves transparency and accessibility, but also enables historical comparisons of test outcomes over time. Developers and reviewers can quickly identify regressions or improvements in communication stability and test coverage.
 
 \newpage
 \subsection{Summary}
