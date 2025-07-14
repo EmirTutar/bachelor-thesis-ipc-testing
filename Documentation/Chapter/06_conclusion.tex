@@ -1,5 +1,50 @@
 \selectlanguage{english}
 \clearpage
-\section{Conclusion and Outlook (TODO)}
-// TODO
-\newpage
+\section{Conclusion and Outlook}
+\markright{\MakeUppercase{Conclusion and Outlook}}
+
+
+\subsection*{Summary of Results}
+
+The goal of this thesis was to develop a reusable and automated integration testing concept for inter-process communication (IPC) middleware, demonstrated using the eCAL framework. To achieve this, a modular and containerized test system was designed and implemented using Robot Framework and Docker.
+
+\vspace{1em}
+The resulting solution enables the execution of isolated, reproducible, and scalable integration tests across a variety of communication modes. The key contribution of the work is the creation of a generic test infrastructure that abstracts away platform dependencies while supporting fault simulation, orchestration, and flexible configuration.
+
+\vspace{1em}
+In total, eight integration test cases were designed and executed. These are divided into two categories: standard operation tests and fault injection tests. The scenarios cover both publish-subscribe and RPC patterns.
+
+\vspace{1em}
+The test coverage includes all core transport modes supported by eCAL, such as shared memory (SHM), TCP, and UDP, both in local and network-based configurations. The test logic checks not only the correct functioning of eCAL communication under normal conditions but also how the system behaves in edge cases like component crashes or temporary network failures.
+
+\vspace{1em}
+\subsection*{Evaluation of the Approach}
+
+The developed test system proved to be effective in validating both standard and failure scenarios. For the specific case of eCAL, the results showed that the middleware works reliably under ideal conditions and remains stable even during crash situations or network failures.
+
+\vspace{1em}
+More generally, the solution demonstrates how integration testing can be applied to IPC systems with minimal manual effort. New scenarios, such as adding publishers or simulating network interruptions, could be added easily through configuration without changing the test logic.
+
+\vspace{1em}
+Thanks to the modular design and use of standard tools like Docker and Robot Framework, the system supports full automation and integration into CI/CD pipelines. The test execution is reproducible, and all steps from building containers to validating logs are controlled by reusable Python and shell scripts.
+
+\vspace{1em}
+\subsection*{Limitations and Outlook}
+
+While the current test system provides a solid foundation for automated IPC testing, it also has limitations. All tests are based on predefined containers and fixed communication patterns. Dynamic test generation, large-scale parallel setups, or real-time performance measurements were not within the scope of this work.
+
+\vspace{1em}
+In addition, the tests are currently focused on the functional level. Topics such as security, data consistency under load, or long-term stability have not yet been addressed and could be explored in future work.
+
+\vspace{1em}
+The general concept, however, can be extended beyond eCAL. The modular test infrastructure and test execution logic are applicable to other IPC systems, as long as the communication logic is containerizable and script-controlled. This makes the presented approach a reusable blueprint for testing in other distributed environments.
+
+\vspace{1em}
+\subsection*{Final Remarks}
+
+\vspace{1em}
+This thesis has shown how integration testing of IPC middleware can be made more systematic, scalable, and reusable. The developed concept not only supports testing of eCAL, but also lays the foundation for future testing strategies in distributed systems.
+
+\vspace{1em}
+From a personal perspective, working on this topic has deepened the understanding of software testing, containerization, and communication frameworks. It also highlighted the importance of test automation in modern development workflows and showed how infrastructure and tooling choices can strongly influence the maintainability of complex systems.
+

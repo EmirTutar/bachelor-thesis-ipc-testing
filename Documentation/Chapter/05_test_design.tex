@@ -2,14 +2,16 @@
 \clearpage
 \section{Design and Automation of Tests}
 
-This chapter describes the design and practical execution of integration tests for the eCAL (enhanced Communication Abstraction Layer) middleware. The objective is to demonstrate how automated tests can be used to verify communication behavior in distributed systems built with eCAL. To this end, a test environment was implemented that combines Robot Framework for orchestration and Docker for process isolation, reproducibility, and fault simulation.
-\\
-\\
-The test environment focuses on realistic publish-subscribe scenarios in which multiple eCAL nodes communicate over shared topics using various transport mechanisms. Test cases include verification of message delivery, failure tolerance, and timing behavior. Additionally, the system provides log inspection, automated validation of test outcomes, and the generation of structured test reports.
-\\
-\\
-The structure of this chapter is as follows: Section 5.1 introduces the architecture of the test setup and describes the interaction between its components. Section 5.2 details the infrastructure and key implementation elements. Section 5.3 presents selected test cases along with their execution flow and validation criteria. Section 5.4 discusses the handling of edge cases. Finally, Section 5.5 outlines how the test execution is automated and how the setup can be integrated into a continuous integration workflow.
+This chapter presents the design and implementation of a test system focused on **integration testing** of the eCAL middleware. In integration tests, multiple components or subsystems are combined and tested as a group to verify that they interact correctly. This is especially relevant for communication middleware, where the interaction between distributed publishers, subscribers, servers, and clients must be validated under real-world conditions.
 
+\vspace{0.9em}
+The primary goal is to evaluate eCAL’s behavior in realistic scenarios involving inter-process communication across various transport mechanisms. To achieve this, a container-based test infrastructure was created that allows isolated, repeatable, and automated execution of test cases. The infrastructure combines Robot Framework for test orchestration with Docker for process isolation, fault simulation, and reproducibility.
+
+\vspace{0.9em}
+The test environment targets publish-subscribe and RPC-based communication patterns and includes both normal operation and fault scenarios (e.g., process crashes or network failures). All tests are designed as integration tests and verify the end-to-end behavior of communicating components, rather than isolated units.
+
+\vspace{0.9em}
+The structure of this chapter is as follows: Section 5.1 introduces the architecture of the test environment and its components. Section 5.2 details the infrastructure and core implementation elements. Section 5.3 explains how edge cases and failure scenarios are handled. Section 5.4 presents selected test cases along with their validation logic. Section 5.5 explains the automation of test execution and how it integrates with a CI/CD pipeline. Section 5.6 describes the visualization of test results via web-based reports. Finally, Section 5.7 provides a summary of the findings and key insights.
 
 \subsection{Architecture of the Test Environment}
 
@@ -19,7 +21,7 @@ The integration tests for eCAL are executed in a containerized environment using
  
  \begin{figure}[H]
  	\centering
- 	\includegraphics[width=0.72\textwidth]{Images/test_architecture_diagram.png}
+ 	\includegraphics[width=1.0\textwidth]{Images/test_architecture_diagram2.png}
  	\caption{Overview of the test environment architecture}
  	\label{fig:test_architecture_diagram}
  \end{figure}
@@ -27,11 +29,10 @@ The integration tests for eCAL are executed in a containerized environment using
 The core components of the test architecture are:
 
 \begin{itemize}
-	\item \textbf{eCAL Publisher and Subscriber}: Each eCAL node is built as a separate C++ application and runs in its own Docker container. These processes communicate via eCAL using shared topics.
+	\item \textbf{eCAL Nodes}: Each eCAL node is built as a separate C++ application and runs in its own Docker container. These processes communicate via eCAL using shared topics.
 	\item \textbf{Docker Network}: All containers are connected to a common virtual Docker network (e.g., \texttt{ecal\_test\_net}), which enables communication using the selected transport layers.
 	\item \textbf{Robot Framework}: The test logic is defined using Robot Framework. It is responsible for starting containers, injecting faults, checking logs, and validating test success criteria.
-	\item \textbf{Entrypoint Scripts}: Each container uses an \texttt{entrypoint.sh} script that decides which executable to run (e.g., a publisher, subscriber, or test orchestrator), based on input arguments.
-	\item \textbf{eCAL Configuration Files}: Runtime behavior such as communication mode (e.g., UDP vs. SHM) is controlled using \texttt{ecal.yaml} files or configuration overrides in code.
+	\item \textbf{Entrypoint Scripts}: Each container uses an \texttt{entrypoint.sh} script that decides which executable to run (e.g., a publisher, subscriber, server, or client), based on input arguments.
 \end{itemize}
 
 The test environment supports all major eCAL communication modes:
@@ -54,15 +55,28 @@ The integration test infrastructure for eCAL was designed to be modular, reusabl
 Each component of the infrastructure follows a clear responsibility, which improves maintainability and simplifies debugging. The separation of test logic (e.g., message exchange and failure simulation) and infrastructure logic (e.g., container orchestration) ensures clean design and scalability.
 
 \vspace{1em}
-\textbf{1. MyDockerLibrary.py}
+\textbf{1. DockerLibrary.py}
 
 \vspace{0.3em}
-This custom Python library for Robot Framework provides keywords to manage Docker containers. It offers reusable functions for starting and stopping containers, retrieving logs, checking exit codes, and simulating network disconnections. It abstracts low-level Docker interactions into simple, test-ready keywords.
+This custom Python library for Robot Framework provides keywords to manage Docker containers. It simplifies the interaction with Docker by offering reusable commands that can be used directly in test cases. The library hides complex details and enables clear and reliable test automation.
 
 \vspace{0.5em}
-A typical use case is stopping and cleaning up test containers after execution. Listing~\ref{lst:docker_py_stop} shows a simplified implementation of the \texttt{Stop Container} keyword in Python, which handles safe shutdown and removal. Listing~\ref{lst:docker_robot_stop} illustrates how the keyword is used in a Robot Framework test case.
+Some of the main features of the DockerLibrary are:
 
-\begin{lstlisting}[style=cppstyle, language=Python, caption={Example keyword implementation in \texttt{MyDockerLibrary.py}}, label={lst:docker_py_stop}, captionpos=b]
+\begin{itemize}
+	\item \textbf{Starting and stopping containers:} Containers can be launched with custom names, arguments, or even fixed IP addresses if needed.
+	\item \textbf{Log collection:} Output from running containers is collected and made available for test evaluation and debugging.
+	\item \textbf{Exit code handling:} The library waits for the container to finish and reads its exit code to determine if the test passed or failed.
+	\item \textbf{Network control:} Containers can be connected to or disconnected from Docker networks during the test, allowing the simulation of network failures.
+	\item \textbf{Container tracking:} Containers are stored in memory using unique names, so they can be easily referenced and stopped later in the test.
+	\item \textbf{Error handling:} If a container has already been removed or cannot be found, a warning is shown instead of causing a crash.
+\end{itemize}
+
+\vspace{0.5em}
+A common use case is stopping and cleaning up test containers after the test has finished. Listing~\ref{lst:docker_py_stop} shows a simplified version of the \texttt{Stop Container} keyword in Python, while Listing~\ref{lst:docker_robot_stop} shows how this keyword is used in a Robot Framework test case.
+
+
+\begin{lstlisting}[style=cppstyle, language=Python, caption={Example keyword implementation in \texttt{DockerLibrary.py}}, label={lst:docker_py_stop}, captionpos=b]
  @keyword
   def stop_container(self, name):
     if name in self.containers:
@@ -76,9 +90,10 @@ A typical use case is stopping and cleaning up test containers after execution. 
            self.containers.pop(name, None)
 \end{lstlisting}
 
+\clearpage
 \begin{lstlisting}[style=cppstyle, caption={Calling \texttt{Stop Container} in a Robot Framework test}, label={lst:docker_robot_stop}, captionpos=b]
 *** Settings ***
- Library           lib/MyDockerLibrary.py	
+ Library           lib/DockerLibrary.py	
 
 *** Test Cases ***
  Start Test
@@ -116,6 +131,7 @@ This shared C++ utility is responsible for configuring communication parameters 
  }
 \end{lstlisting}
 
+\clearpage
 \begin{lstlisting}[style=cppstyle, caption={Partial example for UDP setup}, label={lst:setup_ecal}, captionpos=b]
  if (mode == "local_udp"){
   config.communication_mode = 
@@ -144,18 +160,145 @@ This shell script builds the Docker images required for each test. It invokes CM
 This is the entry script executed inside each container. It uses the given arguments (e.g., role: publisher or subscriber) to launch the correct binary with matching configuration. It also supports scenarios where both publisher and subscriber or multiple binarys are launched together inside the same container.
 
 \vspace{1em}
-The infrastructure enables consistent and isolated execution across all test cases while remaining flexible enough to simulate failures, delays, or disconnects. New modes or roles can be added without modifying the core infrastructure.
+\textbf{Summary}
+
+\vspace{0.3em}
+ The interaction and execution flow of the test system, from Robot Framework orchestration to container-level execution and evaluation, is illustrated in \texttt{Figure~\ref{fig:ecal_test_flow}}. This infrastructure enables consistent and isolated execution across all test cases while remaining flexible enough to simulate failures, delays, or disconnects. New modes or roles can be added without modifying the core infrastructure.
+
+
+\clearpage
+\begin{landscape}
+	
+	\clearscrheadings
+	\ofoot{}         
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.41\textwidth]{Images/ecal_test_flow.png}
+		\caption{Test flow for eCAL-based integration testing}
+		\label{fig:ecal_test_flow}
+	\end{figure}
+	
+\end{landscape}
+\clearpage
+
+\pagestyle{scrheadings}
+	
+
+\subsection{Handling of Edge Cases}
+
+A key requirement for testing communication middleware is the ability to validate system behavior under abnormal or unexpected conditions. Distributed systems are inherently prone to failures, such as delayed messages, process crashes, or temporary network interruptions. Therefore, in addition to verifying functional correctness, the test environment must support controlled simulation of such conditions.
+
+\vspace{1em}
+This section introduces the strategies used to simulate and evaluate edge cases and fault scenarios within the automated test infrastructure. The goal is to uncover potential weaknesses in eCAL’s communication logic and validate its resilience.
+
+\vspace{1em}
+\textbf{Fault Injection Capabilities}
+
+\vspace{0.4em}
+To enable realistic fault simulations, the Robot Framework infrastructure supports fault injection mechanisms:
+
+\begin{itemize}
+	\item \textbf{Crash simulation:} Docker containers running eCAL nodes can be stopped manually during the test to simulate process crashes.
+	\item \textbf{Network disconnection:} Containers can be detached from their virtual Docker network at runtime to mimic network cable unplug or wireless dropout.
+	\item \textbf{Network reconnection:} Containers can be reconnected to the network after a delay, allowing tests to evaluate recovery behavior and reconnection logic.
+	\item \textbf{Delays and timeouts:} Artificial delays are injected using sleep commands or slow message loops, which help simulate jitter or processing backpressure.
+\end{itemize}
+
+These mechanisms are reusable and can be invoked in any test scenario. For example, Listing~\ref{lst:rf_disconnect_example} shows how a network disconnect and reconnect is triggered inside a Robot Framework test case:
+
+\vspace{0.5em}
+\begin{lstlisting}[style=cppstyle, caption={Simulating a temporary network disconnect and reconnect}, label={lst:rf_disconnect_example}, captionpos=b]
+ Disconnect Container From Network   test_client   ecal_net
+ Sleep    6s
+ Reconnect Container   test_client   ecal_net  ip=172.28.0.10
+\end{lstlisting}
+
+\vspace{1em}
+\textbf{Observed Edge Case Categories}
+
+\vspace{0.4em}
+The following edge case categories were explicitly targeted in test scenarios:
+
+\begin{itemize}
+	\item \textbf{Missing receivers:} Publishers start sending before any subscribers are active. These tests confirm that no blocking or crashes occur and that late subscribers still receive messages once available.
+	
+	\item \textbf{Message loss and recovery:} By crashing publishers or subscribers mid-test, message loss is deliberately introduced. The system’s ability to continue communicating correctly with the remaining nodes is then evaluated.
+	
+	\item \textbf{Reconnect scenarios:} Clients or servers are disconnected from the network and reconnected after a delay. These tests assess whether communication can be re-established without restarting the processes.
+	
+	\item \textbf{Large message handling:} Tests involving very large payloads (e.g., 50\,MB) are used to verify memory usage and crash behavior, especially under Zero-Copy Shared Memory configurations.
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Validation Methods}
+
+\vspace{0.4em}
+To verify correct behavior during and after edge conditions, the following evaluation strategies are used:
+
+\begin{itemize}
+	\item \textbf{Exit code checks:} Each component returns an exit code indicating success or failure. Robot Framework interprets these codes to determine whether the test passed.
+	
+	\item \textbf{Payload inspection:} Received messages are validated for correctness (e.g., expected values like 42, 43, 44) and assigned to the correct source based on payload content.
+	
+	\item \textbf{Log analysis:} All container logs are automatically collected and printed in the test report. This helps identify at which point failures occurred and what internal state was reached.
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Conclusion and Role in Test Design}
+
+\vspace{0.4em}
+The ability to inject faults and simulate edge cases is a central part of the overall test strategy. It ensures that communication logic is not only functionally correct but also resilient under stress and partial failure. Many of the following test cases build directly on these capabilities, combining normal communication with injected disconnects or crash conditions. This approach helps create a realistic, production-like test environment that increases confidence in system stability and fault tolerance.
+
 
 \subsection{Test Case Design}
 
-This section presents selected integration test cases that were implemented to validate the core behaviors of the eCAL middleware. The tests are executed using Robot Framework and Docker-based containers and make use of the infrastructure described in Section~5.2. Each test focuses on a specific aspect of publisher-subscriber communication and follows a consistent structure.
+This section presents selected integration test cases that were implemented to validate the behavior and robustness of the eCAL middleware. The tests are executed using Robot Framework and Docker-based containers, building upon the infrastructure described in Section~5.2. Each test targets a specific aspect of IPC such as message delivery, fault handling, or service requests and follows a consistent structure in terms of execution and evaluation.
 
 \vspace{1em}
-For every test case, the objective, execution steps, and success criteria are described. In addition, code examples are provided to illustrate important implementation details, such as how publishers and subscribers are configured and how messages are processed. Each test case ends with a short evaluation, which reflects on the observed behavior and explains how the results contribute to the overall test strategy.
+To provide a clearer overview, the test cases are grouped into two categories:
+
+\begin{itemize}
+	\item \textbf{Normal Operation Scenarios}: Tests that verify the expected behavior of the middleware under standard conditions.
+	\item \textbf{Fault Injection Scenarios}: Tests that simulate failure situations such as process crashes or network disconnects.
+\end{itemize}
+
+\vspace{0.3em}
+Table~\ref{tab:test_case_overview} summarizes all implemented test cases, including their classification and main focus.
+\begin{table}[H]
+	\renewcommand{\arraystretch}{1.45}
+	\setlength{\tabcolsep}{10pt}
+	\centering
+	\begin{tabular}{|c|l|l|}
+		\hline
+		\textbf{ID} & \textbf{Title} & \textbf{Type} \\
+		\hline
+		\textbf{\hyperref[sec:tc1]{TC 1}} & \textbf{\hyperref[sec:tc1]{Publisher to Subscriber}} & Normal Operation \\
+		\hline
+		\textbf{\hyperref[sec:tc2]{TC 2}} & \textbf{\hyperref[sec:tc2]{Multiple Publishers/Subscribers}} & Normal Operation \\
+		\hline
+		\textbf{\hyperref[sec:tc3]{TC 3}} & \textbf{\hyperref[sec:tc3]{RPC Ping Request-Response}} & Normal Operation \\
+		\hline
+		\textbf{\hyperref[sec:tc4]{TC 4}} & \textbf{\hyperref[sec:tc4]{RPC N:N Communication}} & Normal Operation \\
+		\hline
+		\textbf{\hyperref[sec:tc5]{TC 5}} & \textbf{\hyperref[sec:tc5]{Publisher Crash (in Transmission)}} & Fault Injection \\
+		\hline
+		\textbf{\hyperref[sec:tc6]{TC 6}} & \textbf{\hyperref[sec:tc6]{Subscriber Crash (in Reception)}} & Fault Injection \\
+		\hline
+		\textbf{\hyperref[sec:tc7]{TC 7}} & \textbf{\hyperref[sec:tc7]{Network Failure Simulation}} & Fault Injection \\
+		\hline
+		\textbf{\hyperref[sec:tc8]{TC 8}} & \textbf{\hyperref[sec:tc8]{RPC Reconnect (Network Failure)}} & Fault Injection \\
+		\hline
+	\end{tabular}
+	\caption{Overview of test cases and their classification}
+	\label{tab:test_case_overview}
+\end{table}
+
+Each test case includes a description of its objective, execution flow, success criteria, configuration details, and an evaluation of the observed results.  In addition, code examples are provided to illustrate relevant implementation details, including how publishers, subscribers, or RPC clients are configured and how data is processed. The next subsections present the individual test cases in detail.
 
 \vspace{1em}
 \subsubsection{Test Case 1: Publisher to Subscriber Communication}
-
+\label{sec:tc1}
 \textbf{Objective:}
 
 \vspace{0.4em}
@@ -234,7 +377,7 @@ The subscriber callback reads the first byte of the received buffer and casts it
 \end{lstlisting}
 
 \vspace{0.4em}
-The configuration with TLCAP in Listing \ref{lst:tclap_basic} allows full flexibility for running the same binary with different roles and transport modes. The \texttt{--mode} parameter (e.g., \texttt{local\_tcp}) enables switching between eCAL transport layers without modifying the code. The use of TCP is especially useful for tests that simulate network scenarios across Docker containers, where shared memory is not apply able.
+The configuration with TLCAP in Listing \ref{lst:tclap_basic} allows full flexibility for running the same binary with different roles and transport modes. The \texttt{--mode} parameter (e.g., \texttt{local\_tcp}) enables switching between eCAL transport layers without modifying the code. The use of TCP is especially useful for tests that simulate network scenarios across Docker containers, where shared memory is not applicable.
 
 \vspace{1em}
 
@@ -247,6 +390,7 @@ This basic test confirms that eCAL reliably delivers messages across all support
 \vspace{1em}
 \vspace{1em}
 \subsubsection{Test Case 2: Multiple Publishers and Subscribers}
+\label{sec:tc2}
 
 \textbf{Objective:}
 
@@ -318,9 +462,152 @@ From a combinatorial perspective, a complete evaluation of the publish-subscribe
 \vspace{1em}
 By implementing N:N tests across all five eCAL transport modes (\texttt{local\_shm}, \texttt{local\_udp}, \texttt{local\_tcp}, \texttt{network\_udp}, \texttt{network\_tcp}), we effectively validate the core functionality and robustness of the middleware under realistic and complex conditions. This strategic reduction in test permutations allows for efficient validation without sacrificing coverage.
 
+\newpage
+\subsubsection{Test Case 3: RPC Ping Request-Response}
+\label{sec:tc3}
+
+\textbf{Objective:}
+
+\vspace{0.4em}
+Verify that a client can successfully call a remote method ("Ping") on an eCAL RPC server and receive a valid response.
+
+\vspace{0.5em}
+\textbf{Execution:}
+\begin{itemize}
+	\item The \texttt{rpc\_ping\_server} registers a service method named \texttt{Ping}.
+	\item The \texttt{rpc\_ping\_client} connects to the server and sends a request with content \texttt{"PING"}.
+	\item The server responds with \texttt{"PONG"}.
+	\item The client validates the response and exits with code \texttt{0}.
+\end{itemize}
+
+\textbf{Success Criteria:}
+\begin{itemize}
+	\item The server receives and processes a request.
+	\item The response string \texttt{"PONG"} is printed by the client.
+	\item The client exits with return code \texttt{0}.
+\end{itemize}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Role} & \textbf{Mode} & \textbf{Method} & \textbf{Expected Response} \\
+		\midrule
+		rpc\_ping\_server  & RPC Server   & network\_udp & Ping & PONG \\
+		rpc\_ping\_client  & RPC Client   & network\_udp & Ping & PONG \\
+		\bottomrule
+	\end{tabular}
+	\caption{Configuration for RPC Ping Test}
+	\label{tab:rpc_ping_test}
+\end{table}
+
+
+\textbf{Code Examples:}
+
+\vspace{0.4em}
+The server registers a method named \texttt{Ping} that responds with \texttt{PONG} if it receives \texttt{PING} as request (Listing~\ref{lst:rpc_n_n_server_callback}).
+
+\begin{lstlisting}[style=cppstyle, caption={RPC Server handler for method "Ping"}, label={lst:rpc_n_n_server_callback}, captionpos=b]
+ server.SetMethodCallback(method_info, [](const eCAL::
+ SServiceMethodInformation&, const std::string& request,
+ std::string& response) -> int {
+   if (request == "PING"){
+     response = "PONG";
+     return 0;
+   }
+   response = "UNKNOWN";
+   return 1;
+ });
+\end{lstlisting}
+
+The client connects to the server, sends \texttt{"PING"}, waits for the reply, and prints the server’s response (Listing~\ref{lst:rpc_client_call}).
+
+\begin{lstlisting}[style=cppstyle, caption={RPC Client sends Ping request and prints response}, label={lst:rpc_client_call}, captionpos=b]
+ std::string request = "PING";
+ std::vector<eCAL::SServiceResponse> responses;
+ bool success = client.CallWithResponse("Ping", request, responses, 1000);
+	
+ for (const auto& response : responses){
+   std::cout << "[Client] Server response: " << response.response << std::endl;
+ }
+\end{lstlisting}
+
+\vspace{0.5em}
+\textbf{Evaluation:}
+
+\vspace{0.4em}
+This test verifies the correct implementation of eCAL’s RPC interface using a request–response pattern. It confirms that the client and server can communicate over UDP using named service methods. The use of response validation and exit codes allows automated checking of RPC behavior in CI pipelines. It also shows how clients can discover services and call remote methods in a distributed testing environment using Docker and Robot Framework.
+
+\subsubsection{Test Case 4: RPC N:N Communication}
+\label{sec:tc4}
+
+\textbf{Objective:}
+
+\vspace{0.4em}
+Verify that multiple clients can simultaneously call the same RPC method on multiple eCAL servers and receive a valid response. This test evaluates the scalability and correctness of eCAL’s service-based communication pattern under N:N conditions.
+
+\vspace{0.5em}
+\textbf{Execution:}
+\begin{itemize}
+	\item Two RPC servers register a service named \texttt{rpc\_n\_to\_n\_service} with the method \texttt{Ping}.
+	\item Each of the two clients connects to all available servers and sends a \texttt{"PING"} request.
+	\item Each server responds with \texttt{"PONG"}.
+	\item Each client verifies the number and content of responses and exits with return code \texttt{0}.
+\end{itemize}
+
+\newpage
+
+\vspace{0.4em}
+\textbf{Success Criteria:}
+\begin{itemize}
+	\item All clients receive two responses, each containing \texttt{"PONG"}.
+	\item No timeout or connection errors occur.
+	\item All clients exit with return code \texttt{0}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Role} & \textbf{Count} & \textbf{Mode} & \textbf{Expected Response} \\
+		\midrule
+		rpc\_n\_to\_n\_server & RPC Server & 2 & network\_udp & PONG \\
+		rpc\_n\_to\_n\_client & RPC Client & 2 & network\_udp & 2×PONG \\
+		\bottomrule
+	\end{tabular}
+	\caption{Configuration for RPC N:N Communication Test}
+	\label{tab:rpc_n_n_test}
+\end{table}
+
+\vspace{0.5em}
+\textbf{Code Examples:}
+
+The client sends a Ping request and validates that all received responses are equal to \texttt{"PONG"} (Listing~\ref{lst:rpc_n_n_client_response}).
+
+\begin{lstlisting}[style=cppstyle, caption={RPC Client receives multiple responses}, label={lst:rpc_n_n_client_response}, captionpos=b]
+ std::vector<eCAL::SServiceResponse> responses;
+ client.CallWithResponse("Ping", "PING", responses, 2000);
+ int pong_count = 0;
+	
+ for (const auto& r : responses){
+     if (r.response == "PONG") ++pong_count;
+ }
+ 
+ return pong_count == 2 ? 0 : 1;
+\end{lstlisting}
+
+\vspace{0.4em}
+\textbf{Evaluation:}
+
+\vspace{0.4em}
+This test confirms that eCAL supports concurrent N:N RPC communication and that multiple clients can address multiple servers via shared service names. It demonstrates that clients receive multiple valid responses for a single call and can handle those responses correctly in parallel scenarios. The test also confirms that the middleware’s internal discovery and routing logic is robust across multiple service providers.
+
 \vspace{1em}
-\vspace{1em}
-\subsubsection{Test Case 3: Publisher Crash During Transmission}
+From a test design perspective, this N:N scenario verifies both 1:N and N:1 communication patterns. Each client must discover and contact multiple servers (1:N), and each server must respond correctly to multiple clients (N:1). By executing this test case, the core mechanisms of eCAL's RPC handling are validated across all relevant communication directions, while reducing the total number of required test permutations.
+
+\subsubsection{Test Case 5: Publisher Crash During Transmission}
+\label{sec:tc5}
 
 \textbf{Objective:} 
 
@@ -396,7 +683,6 @@ The subscriber counts received values and returns 0 only if enough \texttt{43} v
 
 \vspace{0.5em}
 
-\newpage
 \textbf{Evaluation:}
 
 This test demonstrates that eCAL remains fully functional and continues to deliver messages even when one of the publishers crashes unexpectedly. The second publisher, which sends payload \texttt{43}, continues to operate without interruption. This confirms that the failure of one communication node does not affect the functionality of others. The test was executed in all supported eCAL transport modes, showing that this reliability is consistent regardless of the communication layer.
@@ -406,7 +692,8 @@ This test demonstrates that eCAL remains fully functional and continues to deliv
 The use of a crash publisher simulates real-world process failures, and the test verifies that message delivery remains uninterrupted. By comparing the message counts, the system ensures that no "phantom" messages are received after the crash point. This approach can be used as a template for testing fault tolerance in distributed IPC systems.
 
 \vspace{1em}
-\subsubsection{Test Case 4: Subscriber Crash During Reception}
+\subsubsection{Test Case 6: Subscriber Crash During Reception}
+\label{sec:tc6}
 
 \textbf{Objective:} \\
 Verify that the communication remains stable even when one subscriber crashes while receiving large messages.
@@ -417,7 +704,7 @@ Verify that the communication remains stable even when one subscriber crashes wh
 	\item A \texttt{large\_publisher} sends three large messages (each about 50\,MB) on the same topic.
 	\item One \texttt{crash\_subscriber} is configured to crash after a short time during message reception.
 	\item One \texttt{test\_subscriber} continues running and should receive all messages correctly.
-	\item The test is executed in all supported eCAL transport modes, except for local UDP which cannot handle large messages.
+	\item The test is executed in all supported eCAL transport modes, except for UDP which cannot handle large messages.
 	\item A special variant uses SHM with \texttt{zero\_copy\_mode = true} to verify robustness of shared memory access.
 \end{itemize}
 
@@ -447,6 +734,7 @@ Verify that the communication remains stable even when one subscriber crashes wh
 \vspace{0.5em}
 \textbf{Code Example:}
 
+\vspace{0.4em}
 The crashing subscriber aborts its process intentionally after two seconds of runtime if it receives any message (see Listing~\ref{lst:sub_crash_logic}).
 
 \begin{lstlisting}[style=cppstyle, caption={Crash condition inside subscriber receive callback}, label={lst:sub_crash_logic}, captionpos=b]
@@ -478,7 +766,6 @@ To simulate high-throughput conditions, the publisher sends three 50\,MB message
 
 \vspace{0.5em}
 
-\newpage
 \textbf{Evaluation:}
 
 \vspace{0.4em}
@@ -496,10 +783,9 @@ Therefore, while Zero-Copy SHM offers performance advantages, it requires carefu
 \vspace{1em}
 In conclusion, this test underscores both the reliability of eCAL in standard SHM, TCP, and UDP scenarios and the current limitations when using Zero-Copy SHM without additional safeguards. Future testing or deployment scenarios should carefully consider the trade-off between performance and fault tolerance when using advanced features like Zero-Copy.
 
-\newpage
-
 \vspace{1em}
-\subsubsection{Test Case 5: Network Failure Simulation}
+\subsubsection{Test Case 7: Network Failure Simulation}
+\label{sec:tc7}
 
 \textbf{Objective:}
 
@@ -545,7 +831,6 @@ Verify that after a simulated network failure, a new local UDP publisher can be 
 	\label{tab:network_failure_sim_44}
 \end{table}
 
-\vspace{0.4em}
 \textbf{Code Examples:}
 
 \vspace{0.4em}
@@ -581,10 +866,8 @@ The new publisher \texttt{local\_udp\_pub\_2} uses payload \texttt{44} and is la
 The subscriber logs all payloads and reports a summary (Listing~\ref{lst:subscriber_check_44}).
 
 \begin{lstlisting}[style=cppstyle, caption={Subscriber validation logic for all payloads}, label={lst:subscriber_check_44}, captionpos=b]
- int count_42 = 0;
- int count_43 = 0;
- int count_44 = 0;
-	
+ int count_42 = 0, count_43 = 0, count_44 = 0;
+
  void OnReceive(...) {
    int val = data_[0];
    if (val == 42) ++count_42;
@@ -599,7 +882,7 @@ The subscriber logs all payloads and reports a summary (Listing~\ref{lst:subscri
    return 1;
 \end{lstlisting}
 
-\vspace{1em}
+\vspace{0.4em}
 \textbf{Evaluation:}
 
 \vspace{0.4em}
@@ -614,42 +897,155 @@ From an architecture perspective, this test validates the middleware's robustnes
 \vspace{1em}
 This scenario is especially relevant for distributed systems that combine in-vehicle communication (local) with cloud-connected components (network). It proves that local subsystems can continue operating even in case of external failure.
 
-\subsubsection{Test Case 6: TODO}
+
+\subsubsection{Test Case 8: RPC Reconnect After Network Failure}
+\label{sec:tc8}
+
+\textbf{Objective:}
+
+\vspace{0.4em}
+Verify that an eCAL RPC client can recover from a temporary network disconnection and successfully reconnect to the server. The test simulates a failure and reconnection of the client's network interface during runtime.
+
+\vspace{0.5em}
+\textbf{Execution:}
+\begin{itemize}
+	\item To ensure stable addressing during the disconnect and reconnect phases, both containers are launched with predefined IP addresses. This guarantees that after a reconnect, the RPC discovery mechanism can still resolve and target the original address.
+
+	\item The \texttt{rpc\_ping\_server} container is started first and registers a method \texttt{Ping} via eCAL RPC.
+	
+	\item The client container connects to the server and performs an initial \texttt{"PING"} request.
+	
+	\item Using Dockers network control, the client is then deliberately disconnected from the Docker network for several seconds. This simulates a temporary connection loss, such as would occur during wireless dropouts or hardware interruptions.
+	
+	\item After a delay, the client is reconnected to the same network and reattached with the original IP. Once eCAL restores communication, the client issues a second \texttt{"PING"} request.
+	
+	\item The test succeeds only if both calls are acknowledged by the server with \texttt{"PONG"} and the client exits with code \texttt{0}.
+\end{itemize}
+
+
+\vspace{0.4em}
+\textbf{Success Criteria:}
+\begin{itemize}
+	\item The server receives and responds to two valid \texttt{"PING"} requests.
+	\item The client prints two valid \texttt{"PONG"} responses.
+	\item The client exits with return code \texttt{0}.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+		timeline/.style={draw=gray!40, thick},
+		client/.style={blue!60!black},
+		server/.style={orange!80!black},
+		event/.style={font=\small, align=left},
+		every node/.append style={font=\small}
+		]
+		
+		% Vertical lines for Client and Server
+		\draw[timeline] (0,0) -- (0,-6) node[below=0.5em] {\textbf{Client (172.28.0.10)}};
+		\draw[timeline] (6,0) -- (6,-6) node[below=0.5em] {\textbf{Server (172.28.0.11)}};
+		
+		% Events
+		% Initial ping
+		\draw[->, client] (0,-0.5) -- (6,-1) node[midway, above, sloped] {1. PING};
+		\draw[->, server] (6,-1.2) -- (0,-1.7) node[midway, below, sloped] {1. PONG};
+		
+		% Disconnect
+		\draw[dashed, thick, red] (0,-2) -- (0,-2.7);
+		\node[event, left] at (0,-2.35) {\textcolor{red}{Client disconnected}};
+		
+		% Wait period
+		\node[event, left] at (0,-3.2) {6s delay};
+		
+		% Reconnect
+		\draw[dashed, thick, green!60!black] (0,-3.7) -- (0,-4.3);
+		\node[event, left] at (0,-4.0) {\textcolor{green!60!black}{Client reconnected}};
+		
+		% Second ping
+		\draw[->, client] (0,-4.5) -- (6,-5.0) node[midway, above, sloped] {2. PING};
+		\draw[->, server] (6,-5.2) -- (0,-5.7) node[midway, below, sloped] {2. PONG};
+		
+		% Title
+		\node at (3,0.7) {\textbf{RPC Reconnect Test Flow with Fixed IP and UDP}};
+		
+	\end{tikzpicture}
+	\caption{View of the reconnect test: the client disconnects and reconnects}
+	\label{fig:rpc_reconnect_timeline}
+\end{figure}
+
+
+
+\vspace{0.4em}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{@{}lllll@{}}
+		\toprule
+		\textbf{Component} & \textbf{Role} & \textbf{IP Address} & \textbf{Mode} & \textbf{Response} \\
+		\midrule
+		rpc\_ping\_server & RPC Server & 172.28.0.11 & network\_udp & PONG \\
+		rpc\_ping\_client & RPC Client & 172.28.0.10 & network\_udp & 2×PONG \\
+		\bottomrule
+	\end{tabular}
+	\caption{Setup for RPC reconnect test}
+	\label{tab:rpc_reconnect_test}
+\end{table}
+
+\vspace{0.5em}
+\textbf{Code Examples:}
+
+\vspace{0.4em}
+\textbf{Fixed IP assignment in Robot Framework:}
+
+\vspace{0.4em}
+The following Robot Framework keyword starts the client and server containers with fixed IP addresses. This ensures consistent addressing across disconnect and reconnect steps.
+
+\vspace{0.4em}
+\begin{lstlisting}[style=cppstyle, caption={Starting containers with fixed IPs}, label={lst:rf_start_with_ip}, captionpos=b]
+ Start Container With IP   rpc_server   ${IMAGE}   server
+ ...    network=${NETWORK}    ip=${SERVER_IP}
+ 
+ Start Container With IP   rpc_client   ${IMAGE}   client
+ ...    network=${NETWORK}    ip=${CLIENT_IP}
+\end{lstlisting}
 
 \newpage
-\subsection{Handling of Edge Cases}
+\vspace{0.4em}
+\textbf{Simulating disconnect and reconnect:}
 
-In addition to testing typical communication flows, the test infrastructure also covers a variety of edge cases that may occur in distributed systems. These cases are particularly important for evaluating the robustness and fault tolerance of the middleware under non-ideal conditions.
+\vspace{0.4em}
+This part disconnects the client from the network and reconnects it later with the same IP. It simulates a temporary connection failure during runtime.
+
+\vspace{0.4em}
+\begin{lstlisting}[style=cppstyle, caption={Simulating network disconnect and reconnect}, label={lst:rf_disconnect_reconnect}, captionpos=b]
+ Disconnect Container From Network   rpc_client   ${NETWORK}
+ Sleep    7s
+ Reconnect Container To Network    rpc_client    ${NETWORK}
+                                   ${CLIENT_IP}
+\end{lstlisting}
+
+
+\vspace{0.3em}
+The client performs two RPC calls: one before and one after simulated network loss (Listing~\ref{lst:rpc_reconnect_client}).
+
+\begin{lstlisting}[style=cppstyle, caption={Client performs reconnect and second RPC call}, label={lst:rpc_reconnect_client}, captionpos=b]
+ int pong_counter = 0;
+ int error = call_rpc(client, "Initial", pong_counter);
+ std::this_thread::sleep_for(std::chrono::seconds(8));
+ error += call_rpc(client, "Reconnect", pong_counter);
+ return (pong_counter >= 2 && error == 0) ? 0 : 1;
+\end{lstlisting}
 
 \vspace{0.5em}
-The following categories of edge cases are addressed:
+\textbf{Evaluation:}
 
-\begin{itemize}
-	\item \textbf{Timing jitter and delays} \\
-	To simulate unstable timing behavior, artificial delays are introduced using \texttt{sleep} call to manipulate network latency. This helps verify whether eCAL nodes can still synchronize and communicate reliably under varying timing conditions.
-	
-	\item \textbf{Crash simulation} \\
-	Component failures are simulated by forcefully stopping or disconnecting Docker containers. This reflects real-world scenarios such as sudden application crashes or network cable unplugging. The system’s ability to recover, reconnect, or log the error is then observed.
-	
-	\item \textbf{Missing communication partners} \\
-	In some tests, publishers are started without any active subscribers. This tests whether the publisher behaves correctly in absence of receivers, without blocking or generating errors.
-\end{itemize}
+\vspace{0.4em}
+This test checks how well the eCAL RPC system can handle changing network conditions. By disconnecting the client from the Docker network for a short time, it simulates a temporary network failure. After reconnecting, the client tries to call the server again using the same IP address.
 
-\vspace{0.5em}
-To evaluate the outcome of these tests, different observation methods are applied:
+\vspace{1em}
+eCAL uses service discovery to manage RPC connections. In the case of UDP, this discovery is usually based on multicast messages that are sent across the network. For this to work correctly after a reconnect, the system needs to keep using the same network interface and IP address. The fixed IPs in this test make sure that the server still recognizes the client after reconnecting.
 
-\begin{itemize}
-	\item \textbf{Exit code monitoring} \\
-	Each container returns an exit code upon completion. A code of \texttt{0} indicates successful execution, while non-zero values signal unexpected behavior or test failure.
-	
-	\item \textbf{Log analysis} \\
-	Container logs are collected and printed by the Robot Framework. These logs include important debug messages and warnings generated by the eCAL nodes and the test logic.
-	
-	\item \textbf{Payload validation} \\
-	In several tests, the payload value is checked directly to verify that messages were received correctly and from the expected source.
-\end{itemize}
-
-This structured approach to handling edge cases ensures that both functional correctness and system reliability are fully tested under the most challenging conditions.
+\vspace{1em}
+This setup is similar to real use cases, for example in embedded systems where network connections can drop and come back. The test shows that eCAL can recover from such a disconnection. Both calls (before and after the network drop) are successful, which means that the client could reconnect and the server was still available. This gives confidence that eCAL RPC over UDP multicast can be used in systems where short network problems may happen.
 
 
 \subsection{Automation and Repeatability}
@@ -673,7 +1069,7 @@ This command runs the specified test and stores all result files in the \texttt{
 \end{itemize}
 
 \vspace{0.9em}
-To ensure automated and consistent test execution, the framework is fully integrated into GitHub Actions. This platform offers native support for defining CI workflows directly in the repository using YAML configuration files. The integration allows tests to be triggered automatically in the following scenarios:
+To ensure automated and consistent test execution, the tests are fully integrated into GitHub Actions. This platform offers native support for defining CI workflows directly in the repository using YAML configuration files. The integration allows tests to be triggered automatically in the following scenarios:
 
 \begin{itemize}
 	\item After each push to the main repository (continuous integration)
@@ -684,7 +1080,7 @@ To ensure automated and consistent test execution, the framework is fully integr
 Test results are stored and deployed via GitHub Pages, enabling direct access to all test reports through a structured web interface. Each test run is timestamped and, if available, linked to the triggering commit, ensuring traceability across test history.
 
 \vspace{0.5em}
-The overall interaction between the main repository and the test framework is illustrated in the following diagram:
+The overall interaction between the main repository and the ecal-test-suite is illustrated in the following diagram:
 
 \vspace{1em}
 \begin{center}
@@ -701,7 +1097,7 @@ The overall interaction between the main repository and the test framework is il
 		\node[action, below=of repo1] (trigger) {Trigger: On Push to master};
 		\node[action, below=of trigger] (dispatch) {repository\_dispatch to Tests};
 		
-		\node[repo, right=5.5cm of repo1] (repo2) {eCAL Tests Repository};
+		\node[repo, right=5.5cm of repo1] (repo2) {ecal-test-suite Repository};
 		\node[action, below=of repo2] (ci) {CI Run: Docker + Robot Framework};
 		\node[web, below=of ci] (pages) {Reports deploy to GitHub Pages};
 		
