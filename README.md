@@ -8,6 +8,7 @@ Latest Version of the Bachelor Thesis:
 **Emircan Tutar**  
  
 Ravensburg-Weingarten University of Applied Sciences
+
 Study Program: Applied Computer Science 
 
 ## Related Projects
