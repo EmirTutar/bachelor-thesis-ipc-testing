@@ -16,10 +16,10 @@ Study Program: Applied Computer Science
   Official repository of the eCAL communication middleware by the Eclipse Foundation.
 
 - [eCAL Test Suite (Official)](https://github.com/eclipse-ecal/ecal-test-suite)  
-  The official test suite for validating the functionality and robustness of eCAL components.
+  Official test suite for eCAL, developed as part of this Bachelor's thesis. It implements the automated testing approach introduced and evaluated in the thesis.
 
 - [Initial Prototype: eCAL Test Framework](https://github.com/EmirTutar/ECAL_Test_Framework)  
-  Early development version of the test framework, later replaced by the official test suite.
+  Early development version of the test suite, later replaced by the official ecal test suite repository.
 
 ## Overview
 This bachelor's thesis deals with developing and evaluating a system testing framework for Inter-Process Communication (IPC) based on eCAL (enhanced Communication Abstraction Layer). The aim is to create a standardized and reliable method to test distributed applications, ensuring stable communication, robustness, and performance in realistic scenarios.
