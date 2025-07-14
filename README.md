@@ -2,13 +2,24 @@
 
 ## Get the PDF - Version
 Latest Version of the Bachelor Thesis:
--->📥 Download [Bachelor_thesis.pdf](https://github.com/EmirTutar/BA_Ecal_Test_Framework/releases/latest/download/Bachelor_thesis.pdf)
+-->📥 Download [Bachelor_thesis.pdf](https://github.com/EmirTutar/bachelor-thesis-ipc-testing/releases/latest/download/Bachelor_thesis.pdf)
 
 ## Author
 **Emircan Tutar**  
  
 Ravensburg-Weingarten University of Applied Sciences
 Study Program: Applied Computer Science 
+
+## Related Projects
+
+- [eCAL (Main Repository)](https://github.com/eclipse-ecal/ecal)  
+  Official repository of the eCAL communication middleware by the Eclipse Foundation.
+
+- [eCAL Test Suite (Official)](https://github.com/eclipse-ecal/ecal-test-suite)  
+  The official test suite for validating the functionality and robustness of eCAL components.
+
+- [Initial Prototype: eCAL Test Framework](https://github.com/EmirTutar/ECAL_Test_Framework)  
+  Early development version of the test framework, later replaced by the official test suite.
 
 ## Overview
 This bachelor's thesis deals with developing and evaluating a system testing framework for Inter-Process Communication (IPC) based on eCAL (enhanced Communication Abstraction Layer). The aim is to create a standardized and reliable method to test distributed applications, ensuring stable communication, robustness, and performance in realistic scenarios.
@@ -47,10 +58,5 @@ BA_Ecal_Test_Framework
 
 ## Automated Builds
 The bachelor thesis (PDF) is automatically compiled after each push using GitHub Actions.  
-You can download the latest compiled PDF from **[GitHub Actions → Artifacts](https://github.com/EmirTutar/BA_Ecal_Test_Framework/actions?query=workflow%3A"Build+PDF")**.  
+You can download the latest compiled PDF from **[GitHub Actions → Artifacts](https://github.com/EmirTutar/bachelor-thesis-ipc-testing/actions?query=workflow%3A"Build+PDF")**.  
 📌 **Note:** The downloaded file is a `.zip` archive. Extract it to access the `Bachelor_thesis.pdf`.
-
-## License
-This work and its contents are intended only for academic purposes.
-
-**© 2025 Emircan Tutar. All rights reserved.**
