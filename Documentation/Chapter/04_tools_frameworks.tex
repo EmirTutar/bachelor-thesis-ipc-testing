@@ -78,7 +78,7 @@ To choose suitable testing tools and frameworks, several criteria were defined:
 \begin{itemize}
 	\item \textbf{Language Support:} The framework should support the languages already in use in the development environment, particularly C++ and Python.
 	\item \textbf{Automation Capabilities:} Support for test automation, headless execution, and integration into CI/CD systems is essential.
-	\item \textbf{Support for IPC Mechanisms:} Tools should be able to handle the orchestration of multi-process communication patterns, such as publish-subscribe and request-response.
+	\item \textbf{Multi-Process Orchestration:} The tool should be able to handle the orchestration of multi-process communication patterns, such as publish-subscribe and request-response.
 	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as this is the primary target platform.
 	\item \textbf{Observability and Reporting:} Tools should offer logging, result exporting, or structured test result visualization (e.g., HTML reports).
 \end{itemize}
@@ -125,50 +125,47 @@ For these reasons, these tools are not recommended for integration testing of eC
 
 \subsubsection*{behave and Behavior-Driven Development (BDD)}
 
-In addition to the frameworks already discussed, another approach worth mentioning is Behavior-Driven Development (BDD), which combines principles from test-driven development (TDD) and domain-driven design (DDD). BDD focuses on describing software behavior in a language that both developers and non-developers can understand. This is achieved through natural-language test scenarios that capture the expected system behavior from a user's perspective~\cite{North2006}.
+Another approach worth mentioning is Behavior-Driven Development (BDD), which combines principles from test-driven development (TDD) and domain-driven design (DDD). BDD focuses on describing software behavior in a language that both developers and non-developers can understand~\cite{North2006}.
 
 \vspace{1em}
-A popular BDD framework in the Python ecosystem is \texttt{behave}~\cite{BehaveDocs}. It allows developers to write executable specifications using the Gherkin syntax (Given–When–Then). These specifications describe how the system should behave in various scenarios, and the test steps are mapped to Python functions that implement the expected actions and assertions.
+A popular Python framework for BDD is \texttt{behave}~\cite{BehaveDocs}, which uses the Gherkin syntax (Given–When–Then) to define executable specifications. The actual test logic is implemented in Python, offering flexibility for system and integration testing scenarios. However, orchestration and reporting must be implemented separately using custom Python scripts or shell tools.
 
-\vspace{1em}
-Compared to Robot Framework, \texttt{behave} operates at a lower abstraction level. It requires more manual setup but provides more direct control over test logic and structure. This can be an advantage in complex test environments, where flexibility and integration with Python modules is needed. Like Robot Framework, \texttt{behave} is suitable for system and integration testing and can be integrated into CI/CD pipelines. However, it does not include built-in orchestration features like process control or test reporting. These features must be implemented separately using Python libraries or shell scripts.
+\newpage
+\subsection{Tool Selection for Middleware Testing}
 
-\vspace{1em}
-Overall, \texttt{behave} is a strong candidate for projects that follow a BDD workflow and benefit from human-readable test scenarios. It is especially useful when stakeholders or domain experts should be involved in defining test cases. However, for the use case of orchestrating multiple IPC processes in eCAL, Robot Framework may be a more practical choice due to its built-in libraries and simpler process control.
-
-\vspace{3em}
+\vspace{0em}
 Table~\ref{tab:framework_comparison_reporting} presents an overview of evaluated tools in this Chapter.
 
 \begin{table}[H]
 	\centering
 	\renewcommand{\arraystretch}{1.4}
-	\begin{tabular}{|p{2.31cm}|p{1cm}|p{1.7cm}|p{2.1cm}|p{1cm}|p{1cm}|p{1.7cm}|}
+	\begin{tabular}{|p{2.8cm}|p{1cm}|p{1.7cm}|p{1cm}|p{1cm}|p{1.7cm}|}
 		\hline
-		\textbf{Framework} & \textbf{CLI} & \textbf{Multi-Process} & \textbf{IPC-Suitability} & \textbf{Open Src} & \textbf{CI/ CD} & \textbf{Reports} \\
+		\textbf{Framework} & \textbf{CLI} & \textbf{Multi- Process} & \textbf{Open Src} & \textbf{CI/ CD} & \textbf{Reports} \\
 		\hline
-		\textbf{Google Test}         & \cmark & \xmark  & Partially               & \cmark & \cmark & XML only \\
+		\textbf{Google Test}         & \cmark & Partial     & \cmark & \cmark & XML only \\
 		\hline
-		\textbf{Robot Framework}     & \cmark & \cmark  & Yes                     & \cmark & \cmark & HTML, XML \\
+		\textbf{Robot Framework}     & \cmark & Yes & \cmark & \cmark & HTML, XML \\
 		\hline
-		\textbf{Gauge Test}          & \cmark & \xmark  & Limited                 & \cmark & \cmark & HTML \\
+		\textbf{Gauge Test}          & \cmark & Limited                       & \cmark & \cmark & HTML \\
 		\hline
-		\textbf{behave (BDD)}        & \cmark & \xmark  & Yes (manual scripted)            & \cmark & \cmark & Text/ Custom \\
+		\textbf{behave (BDD)}        & \cmark & Partial	   & \cmark & \cmark & Text/ Custom \\
 		\hline
-		\textbf{Katalon}             & \xmark & \xmark  & No                      & \xmark & \xmark & HTML, GUI \\
+		\textbf{Katalon}             & \xmark & No                           & \xmark & \xmark & HTML, GUI \\
 		\hline
-		\textbf{Test-Complete}        & \xmark & \xmark  & No                      & \xmark & \xmark & HTML, GUI \\
+		\textbf{TestComplete}        & \xmark &  No                      & \xmark & \xmark & HTML, GUI \\
 		\hline
 	\end{tabular}
-	\caption{Comparison of test frameworks for IPC middleware integration testing, including reporting capabilities}
+	\caption{Comparison of test frameworks for IPC middleware testing with focus on multi-process orchestration}
 	\label{tab:framework_comparison_reporting}
 \end{table}
-
-\newpage
-\subsection{Tool Selection for Middleware Testing}
 
 Following the evaluation of multiple testing frameworks, Robot Framework was identified as a suitable tool for integration testing in middleware-based systems. It fulfills key requirements such as support for keyword-driven test definitions, automation of command-line tools, and coordination of multiple parallel processes. These features are valuable when testing communication patterns like publish-subscribe or service-based exchanges.
 
 \vspace{1em}
+An alternative to Robot Framework is \texttt{behave}, which is suitable for teams following a BDD approach. It enables human-readable scenario definitions and flexible test logic using Python. However, since \texttt{behave} lacks built-in features for process orchestration and structured reporting, it requires additional scripting and infrastructure to reach the same level of automation. For the use case of testing IPC middleware like eCAL, where containerized process management and test reproducibility are critical, Robot Framework remains the more practical and efficient choice.
+
+\vspace{2em}
 For unit-level testing of individual components, GoogleTest remains the preferred choice. Its compatibility with C++ and strong support for isolated module testing make it a practical solution for verifying internal logic, data processing, and error handling at the code level. By combining Robot Framework for system-level validation with GoogleTest for component-level checks, a comprehensive and layered testing strategy can be achieved.
 
 \subsection{Summary}
