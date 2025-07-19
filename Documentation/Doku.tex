@@ -95,8 +95,12 @@
 	%----------------------------------------------------------------------------------------
 	
 	\HRule \\[0.4cm]
-	{ \huge \bfseries Developing a Concept for Automated Testing of IPC Middleware – Demonstrated with eCAL}\\[0.4cm] % Title of your document
+	{ \huge \bfseries Developing a Concept for\\[0.01cm]
+		Automated Testing of IPC \\[0.01cm]
+		Middleware - Demonstrated\\[0.4cm]
+		 with eCAL }\\[0.2cm]
 	\HRule \\[1.5cm]
+
 	
 	%----------------------------------------------------------------------------------------
 	%	AUTHOR SECTION
@@ -133,6 +137,32 @@
 	
 	
 \end{titlepage}
+
+
+\cleardoublepage
+\thispagestyle{empty}
+
+\section*{Declaration of Authorship}
+\vspace{2cm}
+
+I hereby declare that I, \textbf{Emircan Tutar}, have written this Bachelor thesis independently and have used no sources or aids other than those listed in the bibliography.\\[0.5cm]
+
+I confirm that this thesis has not been submitted, either in identical or similar form, to any other examination board.\\[0.5cm]
+
+All parts of the work that are taken literally or in substance from other sources are clearly marked as such.\\[0.5cm]
+
+\textit{Supplement:} In the appendix \textbf{"Documentation of AI Tool Usage"}, I have outlined which AI tools I used, for what purpose, and how they were applied.
+
+\vspace{3cm}
+Weingarten, July 20, 2025
+
+\vspace{2.5cm}
+\rule{8cm}{0.4pt}\\
+\textit{Signature}
+
+\cleardoublepage
+
+
 \pagestyle{plain}
 \pagenumbering{roman}
 \pagebreak
@@ -194,8 +224,6 @@
 	XXXXXXXXX \= XXXXXXXXXXXXXXXXXXXXXXXXXXX \kill % length
 	\textbf{API} \> Application Programming Interface\\[0.3cm]
 	\textbf{BDD} \> Behavior-Driven Development\\[0.3cm]
-	\textbf{CD} \> Continuous Delivery\\[0.3cm]
-	\textbf{CI} \> Continuous Integration\\[0.3cm]
 	\textbf{CI/CD} \> Continuous Integration / Continuous Delivery\\[0.3cm]
 	\textbf{CLI} \> Command Line Interface\\[0.3cm]
 	\textbf{DDS} \> Data Distribution Service\\[0.3cm]
@@ -227,6 +255,40 @@
 \input{Chapter/05_test_design}
 \input{Chapter/06_conclusion.tex}
 \printbibliography[heading=bibintoc]
+
+\cleardoublepage
+\section*{Documentation of AI Tool Usage}
+
+The following table summarizes all uses of AI-based tools during the creation of this thesis.
+
+\vspace{1cm}
+
+\renewcommand{\arraystretch}{1.4} 
+\begin{longtable}{|>{\raggedright\arraybackslash}p{4.6cm}|>{\raggedright\arraybackslash}p{2.9cm}|>{\raggedright\arraybackslash}p{5cm}|}
+	\hline
+	\textbf{Purpose of Use} & \textbf{AI Tool Used} & \textbf{Usage Details} \\
+	\hline
+	Language improvement, rephrasing, and academic tone refinement & \textbf{DeepL Write/ ChatGPT-4o} & Throughout the entire thesis and during final language check \\
+	\hline
+	Clarifying structure, headings, and section transitions & \textbf{ChatGPT-4o} & Outline suggestions and flow improvement in early drafts, throughout sections \\
+	\hline
+	Translation and terminology support & \textbf{DeepL} & General assistance during English writing process \\
+	\hline
+	Finding sources and structuring citations & \textbf{Hesse AI} & Research phase: identifying academic references \\
+	\hline
+	Explaining and paraphrasing technical concepts (e.g., IPC, middleware) & \textbf{ChatGPT-4o} & Used in Chapters 2–4 for explanations, analogies, and comparison tables \\
+	\hline
+	Tool evaluation and comparison (Robot FW, GoogleTest, etc.) & \textbf{DeepL Write/ ChatGPT-4o} & Definition of criteria, comparison structure, and phrasing \\
+	\hline
+	Drafting and refining test architecture and infrastructure & \textbf{ChatGPT-4o} & Sections 5.1–5.2: container orchestration, entrypoints, and test logic \\
+	\hline
+	Test case formulation and fault simulation strategies & \textbf{ChatGPT-4o} & Test Cases 1–8: objectives, success criteria, and implementation flow \\
+	\hline
+	Formulating automation workflow and GitHub Actions CI/CD flow & \textbf{ChatGPT-4o} & Created text for full CI/CD integration in Section 5.5 with diagrams \\
+	\hline
+\end{longtable}
+
+
 \end{document}
 
 

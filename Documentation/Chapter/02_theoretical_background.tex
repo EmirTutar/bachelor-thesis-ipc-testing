@@ -355,10 +355,10 @@ In addition, techniques such as fault injection or failure simulation are partic
 
 \subsubsection{Comparison of Middleware Testing}
 
-To evaluate the practical suitability of different middleware frameworks for testing, it is important to compare their support for common testing methods and tools. While all frameworks follow a publish-subscribe architecture and support integration testing in some form, their features differ significantly in terms of system-level support, real-time validation, simulation tools, and fault injection capabilities \cite{gorton2006software, burns2009real}.
+To understand how different middleware frameworks are currently tested, it is important to compare their support for common testing methods and tools. While all frameworks follow a publish-subscribe architecture and support integration testing in some form, their features differ significantly in terms of system-level support, real-time validation, simulation tools, and fault injection capabilities \cite{gorton2006software, burns2009real}.
 
 \vspace{1em}
-The following list summarizes the most relevant testing aspects and how they are supported by ROS, DDS, and eCAL:
+The extent and structure of testing differ significantly between the frameworks. The following list summarizes the most relevant testing aspects and how they are supported by ROS, DDS, and eCAL:
 
 \begin{itemize}
 	\item \textbf{Integration Testing}
@@ -407,6 +407,6 @@ The following list summarizes the most relevant testing aspects and how they are
 
 \vspace{0.5em}
 
-This comparison shows that ROS provides strong tooling for development and simulation-based testing, while DDS offers the most comprehensive support for Quality-of-Service validation. In contrast, eCAL does not natively support automated system-level testing or fault injection \cite{ecal_official_docs}. However, this thesis introduces a new testing approach later based on Robot Framework and containerized environments to address this gap \cite{RobotFrameworkDocs}.
+This comparison shows that ROS provides strong tooling for development and simulation-based testing, while DDS offers the most comprehensive support for Quality-of-Service validation. In contrast, eCAL does not natively support automated system-level testing or fault injection \cite{ecal_official_docs}. These differences indicate that some frameworks currently lack reusable and automated testing strategies, especially at system level. Addressing these gaps is one of the goals of this thesis.
 
 

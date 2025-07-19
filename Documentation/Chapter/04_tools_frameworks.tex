@@ -76,11 +76,13 @@ Although eCAL includes helpful tools for monitoring and debugging, it does not p
 To choose suitable testing tools and frameworks, several criteria were defined:
 
 \begin{itemize}
-	\item \textbf{Language Support:} The framework should support the languages already in use in the development environment, particularly C++ and Python.
-	\item \textbf{Automation Capabilities:} Support for test automation, headless execution, and integration into CI/CD systems is essential.
+	\item \textbf{Command Line Interface (for Automation):} The tool should support execution via command line to allow headless automation and scripting in CI/CD environments.
 	\item \textbf{Multi-Process Orchestration:} The tool should be able to handle the orchestration of multi-process communication patterns, such as publish-subscribe and request-response.
-	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as this is the primary target platform.
+	\item \textbf{Open Source Availability:} Preference is given to open-source tools to ensure transparency, adaptability, and long-term maintainability.
+	\item \textbf{CI/CD - Automation Capabilities:} Support for test automation, headless execution, and integration into CI/CD systems is essential.
+	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as these is the primary target platform.
 	\item \textbf{Observability and Reporting:} Tools should offer logging, result exporting, or structured test result visualization (e.g., HTML reports).
+
 \end{itemize}
 
 \subsection{Evaluation of Tool Candidates}
@@ -139,26 +141,27 @@ Table~\ref{tab:framework_comparison_reporting} presents an overview of evaluated
 \begin{table}[H]
 	\centering
 	\renewcommand{\arraystretch}{1.4}
-	\begin{tabular}{|p{2.8cm}|p{1cm}|p{1.7cm}|p{1cm}|p{1cm}|p{1.7cm}|}
+	\begin{tabular}{|p{2.8cm}|p{1cm}|p{1.8cm}|p{1.2cm}|p{1cm}|p{1cm}|p{1.8cm}|}
 		\hline
-		\textbf{Framework} & \textbf{CLI} & \textbf{Multi- Process} & \textbf{Open Src} & \textbf{CI/ CD} & \textbf{Reports} \\
+		\textbf{Framework} & \textbf{CLI} & \textbf{Multi- Process} & \textbf{Open- Src} & \textbf{CI/ CD} & \textbf{Plat- form} & \textbf{Reports} \\
 		\hline
-		\textbf{Google Test}         & \cmark & Partial     & \cmark & \cmark & XML only \\
+		\textbf{Google Test}         & \cmark & Partial & \cmark & \cmark & \cmark & XML only \\
 		\hline
-		\textbf{Robot Framework}     & \cmark & Yes & \cmark & \cmark & HTML, XML \\
+		\textbf{Robot Framework}     & \cmark & Yes     & \cmark & \cmark & \cmark & HTML, XML \\
 		\hline
-		\textbf{Gauge Test}          & \cmark & Limited                       & \cmark & \cmark & HTML \\
+		\textbf{Gauge Test}          & \cmark & Limited & \cmark & \cmark & \cmark & HTML \\
 		\hline
-		\textbf{behave (BDD)}        & \cmark & Partial	   & \cmark & \cmark & Text/ Custom \\
+		\textbf{behave (BDD)}        & \cmark & Partial & \cmark & \cmark & \cmark & Text/ Custom \\
 		\hline
-		\textbf{Katalon}             & \xmark & No                           & \xmark & \xmark & HTML, GUI \\
+		\textbf{Katalon}             & \xmark & No      & \xmark & \xmark & \cmark    & HTML, GUI \\
 		\hline
-		\textbf{TestComplete}        & \xmark &  No                      & \xmark & \xmark & HTML, GUI \\
+		\textbf{TestComplete}        & \xmark & No      & \xmark & \xmark & \cmark   & HTML, GUI \\
 		\hline
 	\end{tabular}
 	\caption{Comparison of test frameworks for IPC middleware testing with focus on multi-process orchestration}
 	\label{tab:framework_comparison_reporting}
 \end{table}
+
 
 Following the evaluation of multiple testing frameworks, Robot Framework was identified as a suitable tool for integration testing in middleware-based systems. It fulfills key requirements such as support for keyword-driven test definitions, automation of command-line tools, and coordination of multiple parallel processes. These features are valuable when testing communication patterns like publish-subscribe or service-based exchanges.
 
