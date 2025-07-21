@@ -9,7 +9,7 @@ This chapter presents an evaluation of available tools and test frameworks that 
 \textbf{Overview and Architecture}
 
 \vspace{0.4em}
-eCAL (enhanced Communication Abstraction Layer) is a flexible middleware designed for efficient inter-process communication (IPC). It supports various transport layers, such as shared memory for communication on a single machine, and UDP or TCP for communication over a network. eCAL automatically selects the most suitable transport method based on system conditions \cite{ecal_official_docs}.
+eCAL (enhanced Communication Abstraction Layer) is a flexible middleware designed for efficient inter-process communication (IPC). It supports various transport layers, such as shared memory for communication on a single machine and UDP or TCP for communication over a network. eCAL automatically selects the most suitable transport method based on system conditions \cite{ecal_official_docs}.
 
 
 \vspace{1em}
@@ -80,7 +80,7 @@ To choose suitable testing tools and frameworks, several criteria were defined:
 	\item \textbf{Multi-Process Orchestration:} The tool should be able to handle the orchestration of multi-process communication patterns, such as publish-subscribe and request-response.
 	\item \textbf{Open Source Availability:} Preference is given to open-source tools to ensure transparency, adaptability, and long-term maintainability.
 	\item \textbf{CI/CD - Automation Capabilities:} Support for test automation, headless execution, and integration into CI/CD systems is essential.
-	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as these is the primary target platform.
+	\item \textbf{Platform Compatibility:} The framework must work on Linux and Windows, as these are the primary target platforms.
 	\item \textbf{Observability and Reporting:} Tools should offer logging, result exporting, or structured test result visualization (e.g., HTML reports).
 
 \end{itemize}
@@ -92,7 +92,7 @@ To choose suitable testing tools and frameworks, several criteria were defined:
 GoogleTest is a widely used testing framework for C++ applications. It provides many useful macros and assertions that help developers write automated tests for individual functions, classes, and modules. In the eCAL project, GoogleTest is already used to verify internal logic, data handling, and utility functions. This makes it a good choice for unit testing, especially during early development stages.
 
 \vspace{1em}
-However, GoogleTest is mainly designed for unit testing and does not support tests that involve multiple running processes. Integration testing of IPC middleware usually requires testing communication between different processes such as publishers and subscribers. To use GoogleTest in this context, additional scripts or wrapper functions are needed to start processes and simulate communication. While this is possible, it increases the complexity of test setups and reduces maintainability. Therefore, GoogleTest should be combined with other tools when performing full integration tests. More information is available in the official GoogleTest documentation~\cite{GoogleTestDocs}.
+However, GoogleTest is mainly designed for unit testing and does not support tests that involve multiple running processes. Integration testing of IPC middleware usually requires testing communication between different processes, such as publishers and subscribers. To use GoogleTest in this context, additional scripts or wrapper functions are needed to start processes and simulate communication. While this is possible, it increases the complexity of test setups and reduces maintainability. Therefore, GoogleTest should be combined with other tools when performing full integration tests. More information is available in the official GoogleTest documentation~\cite{GoogleTestDocs}.
 
 \subsubsection*{Robot Framework}
 

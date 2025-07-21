@@ -14,13 +14,14 @@ To develop a structured and practical testing approach, it is important to clear
 Middleware-based systems pose unique testing requirements that differ from classical monolithic systems. Key challenges include the following:
 
 \begin{itemize}
-	\item \textbf{Timing behavior:} IPC systems are sensitive to delays, jitter, and message timing. Integration tests must capture whether messages are delivered in time and in correct order.
+	\item \textbf{Timing behavior:} IPC systems are sensitive to delays, jitter, and message timing. Integration tests must capture whether messages are delivered in time and in the correct order.
 	
 	\item \textbf{Data consistency:} Published data must arrive at all intended subscribers with correct content. Corruption or loss during transmission must be detectable.
 	
 	\item \textbf{Component coordination:} Integration tests must ensure that multiple processes synchronize correctly. This includes proper startup/shutdown sequences and fault handling.
 	
 	\item \textbf{Fault Injection:} To evaluate the system’s robustness, integration tests should include controlled fault scenarios. These may involve simulating message loss, disabling specific network routes, or forcing a publisher to stop sending data during transmission. Such tests help verify how well the middleware handles unexpected problems.
+	
 	\item \textbf{Transport abstraction:} Middleware supports different transport mechanisms (e.g. TCP, shared memory, UDP). Integration tests should verify that core functionality works across transports.
 \end{itemize}
 
@@ -42,7 +43,7 @@ Examples of functional test objectives include:
 	\item Verifying that malformed messages are rejected without crashing the system.
 	\item Testing that RPC requests return valid responses or trigger appropriate timeout behavior.
 	\item Validating transport abstraction by checking that core communication works across TCP, UDP, and shared memory.
-	\item Verifying component coordination such as startup sequences and shutdown order across distributed nodes.
+	\item Verifying component coordination, such as startup sequences and shutdown order, across distributed nodes.
 \end{itemize}
 
 \vspace{1em}

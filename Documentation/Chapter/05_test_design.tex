@@ -2,30 +2,72 @@
 \clearpage
 \section{Design and Automation of Tests}
 
-This chapter presents the design and implementation of a test system focused on **integration testing** of the eCAL middleware. In integration tests, multiple components or subsystems are combined and tested as a group to verify that they interact correctly. This is especially relevant for communication middleware, where the interaction between distributed publishers, subscribers, servers, and clients must be validated under real world conditions.
+This chapter presents the design and implementation of a test system focused on \textbf{integration testing} of the eCAL middleware. In integration tests, multiple components or subsystems are combined and tested as a group to verify that they interact correctly. This is especially relevant for communication middleware, where the interaction between distributed publishers, subscribers, servers, and clients must be validated under real-world conditions.
 
 \vspace{0.9em}
 The primary goal is to evaluate eCAL’s behavior in realistic scenarios involving inter-process communication across various transport mechanisms. To achieve this, a container based test infrastructure was created that allows isolated, repeatable, and automated execution of test cases. The infrastructure combines Robot Framework for test orchestration with Docker for process isolation, fault simulation, and reproducibility.
 
 \vspace{0.9em}
-The test environment targets publish-subscribe and RPC-based communication patterns and includes both normal operation and fault scenarios (e.g., process crashes or network failures). All tests are designed as integration tests and verify the end-to-end behavior of communicating components, rather than isolated units.
+The test environment targets publish-subscribe and RPC-based communication patterns and includes both normal operation and fault scenarios (e.g., process crashes or network failures). All tests are designed as integration tests and verify the end-to-end behavior of communicating components rather than isolated units.
 
 \vspace{0.9em}
-The structure of this chapter is as follows: Section 5.1 introduces the architecture of the test environment and its components. Section 5.2 details the infrastructure and core implementation elements. Section 5.3 explains how edge cases and failure scenarios are handled. Section 5.4 presents selected test cases along with their validation logic. Section 5.5 explains the automation of test execution and how it integrates with a CI/CD pipeline. Section 5.6 describes the visualization of test results via web-based reports. Finally, Section 5.7 provides a summary of the findings and key insights.
+The structure of this chapter is as follows: Section 5.1 introduces the test environment and its components. Section 5.2 details the infrastructure and core implementation elements. Section 5.3 explains how edge cases and failure scenarios are handled. Section 5.4 presents selected test cases along with their validation logic. Section 5.5 explains the automation of test execution and how it integrates with a CI/CD pipeline. Section 5.6 describes the visualization of test results via web-based reports. Finally, Section 5.7 provides a summary of the findings and key insights.
 
 \subsection{Test Environment Overview}
 
-The integration tests for eCAL are executed in a containerized environment using Docker. This setup enables clean isolation between components, reproducible test conditions, and targeted simulation of fault scenarios. The test infrastructure supports both \textit{network-based} and \textit{local communication} and is orchestrated using Robot Framework. 
+To enable structured and reproducible integration testing of the eCAL middleware, a dedicated test environment was designed. It is based on containerized execution using Docker and orchestrated by Robot Framework. Each test case runs in isolation, supports custom configurations, and can simulate both normal and faulty communication behavior.
 
 \vspace{1em}
-To better separate conceptual layers, the following two diagrams present (1) the \textbf{execution flow} of an integration test and (2) the \textbf{architectural setup} of test containers in both \textit{network} and \textit{local} modes.
+The test suite is structured to maximize modularity and clarity. Each scenario resides in a self-contained folder that includes the necessary C++ binaries, test logic, and scripts for container orchestration. Common libraries and configuration helpers are maintained separately to support reuse and consistency across all test cases.
+
+\subsubsection*{Folder Layout and Test Case Assets}
+
+The integration test repository follows a modular layout. Each test case resides in its own folder and contains its specific C++ components, test definitions, and build logic. Shared helper libraries and the base image are placed separately. An overview is provided below in Listing~\ref{lst:folder_structure}:
+
+\vspace{0.5em}
+\begin{lstlisting}[basicstyle=\ttfamily\small, frame=single, caption={Simplified directory structure with key contents}, captionpos=b, label={lst:folder_structure}]
+ integration_tests/
+ +-- <test_case>/              # Example: basic_pub_sub/
+ |  +-- src/                   # C++ sources
+ |  |  +-- publisher.cpp       # Publishes test messages
+ |  |  +-- subscriber.cpp      # Receives messages
+ |  |  +-- CMakeLists.txt      # Build definition
+ |  |
+ |  +-- robottests/
+ |  |  +-- <test_case>.robot   # Test logic
+ |  +-- scripts/
+ |  |  +-- build_images.sh     # Builds test container
+ |  |  +-- entrypoint.sh       # Launches test role 
+ |  |                            (pub/sub)
+ |  +-- docker/
+ |     +-- Dockerfile          # Test-specific image
+ |  
+ +-- lib/
+ |  +-- EcalConfigHelper/      # C++ helpers
+ |  +-- DockerLibrary.py       # Keywords for docker
+ |  +-- GlobalPathsLibrary.py  # Folder and naming 
+ |                               utilities
+ +-- docker/
+ |  +-- Dockerfile.ecal_base   # Base image for all tests
+ ----
+ create_new_test/              # Generator for new tests
+\end{lstlisting}
+
+This structure supports automation and reuse. New test cases can be added easily by following the same layout. A generator tool is provided to ensure consistency when creating new folders and test assets.
+
+
+\vspace{1.5em}
+Each folder, as shown in the structure above, forms the foundation for a complete integration test. However, the layout alone does not reflect how the test logic is executed across tools and containers. To better understand this process, the following diagrams explain the test flow in practice: from orchestrating the test logic with Robot Framework to running binaries inside Docker containers.
+
+\vspace{1em}
+In particular, the next two views illustrate (1) the execution flow of a typical test case and (2) the container architecture used to simulate different communication modes. The test infrastructure supports both \textit{network-based} and \textit{local communication}. 
 
 \vspace{1em}
 \subsubsection*{1. Execution Flow of a Test Case}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.47\textwidth]{Images/test_execution_flow.png}
+	\includegraphics[width=0.36\textwidth]{Images/test_execution_flow.png}
 	\caption{Execution flow of an integration test: Robot Framework initiates the build, launches containers, collects results, and generates reports.}
 	\label{fig:ecal_test_execution_flow}
 \end{figure}
@@ -363,7 +405,7 @@ Ensure that a message published by a single publisher is reliably received by a 
 	\item In local modes (e.g., \texttt{local shm}, \texttt{local udp}), the publisher and subscriber run inside a single container.
 	\item In network modes (e.g., \texttt{network udp}, \texttt{network tcp}), the publisher and subscriber run in separate containers connected via a Docker network.
 	\item The publisher sends a small binary payload of value \texttt{42} (repeated) and logs each send event.
-	\item The subscriber listens on the topic, logs received values, and exits successfully if the expected messages where received within the timeout window.
+	\item The subscriber listens on the topic, logs received values, and exits successfully if the expected messages were received within the timeout window.
 \end{itemize}
 
 \textbf{Success Criteria:}
@@ -1203,7 +1245,7 @@ Clicking on a specific test entry opens the detailed Robot Framework report. Thi
 \end{figure}
 
 \vspace{0.5em}
-This visualization not only improves transparency and accessibility, but also enables historical comparisons of test outcomes over time. Developers and reviewers can quickly identify regressions or improvements in communication stability and test coverage.
+This visualization not only improves transparency and accessibility but also enables historical comparisons of test outcomes over time. Developers and reviewers can quickly identify regressions or improvements in communication stability and test coverage.
 
 \newpage
 \subsection{Summary}
