@@ -131,7 +131,7 @@ As visualized in Figure~\ref{fig:testpyramid}, the pyramid illustrates the princ
 A distributed system is a network of independent computers that appears to users as a single coherent system. In distributed systems, multiple computing devices communicate and coordinate their activities by passing messages to achieve a common goal \cite{tanenbaum2017}. Such systems consist of independent components located on different networked computers, which interact with each other by exchanging messages.
 
 \vspace{1em}
-The primary goals of distributed systems include improving performance, supporting scalability, and provide reliable and fault-tolerant operations. By coordinating tasks across multiple nodes, such systems can make more efficient use of available processing power, memory, and data storage \cite{coulouris2012}.
+The primary goals of distributed systems include improving performance, supporting scalability, and providing reliable and fault-tolerant operations. By coordinating tasks across multiple nodes, such systems can make more efficient use of available processing power, memory, and data storage \cite{coulouris2012}.
 
 \vspace{1em}
 Figure~\ref{fig:distributed_architecture} illustrates a basic distributed system consisting of multiple independent nodes communicating over a network. Each node may serve a specific role, such as providing services, accessing shared resources, or coordinating tasks.
@@ -254,7 +254,7 @@ Zero-copy communication is an advanced IPC technique designed to minimize unnece
 
 \subsection{Middleware in Distributed Systems}
 
-While IPC mechanisms define how processes communicate, middleware abstract these and provide a structured interface for distributed applications.
+While IPC mechanisms define how processes communicate, middleware abstracts these and provides a structured interface for distributed applications.
 
 \subsubsection{Definition and Role of Middleware}
 
@@ -351,14 +351,15 @@ Testing middleware systems effectively requires an understanding of the system a
 Best practices include the use of simulation environments for performance evaluation under controlled conditions, as well as leveraging monitoring and logging tools to capture middleware-level interactions for post-test analysis. Gorton and Liu also highlight the use of profiling and benchmarking frameworks to test middleware scalability across node clusters \cite{gorton2006software}.
 
 \vspace{1em}
-In addition, techniques such as fault injection or failure simulation are particularly valuable when testing distributed middleware. These methods deliberately introduce faults such as: process termination, artificial network loss, or resource exhaustion. These observe how the system responds under edge cases. For containerized systems, this can be achieved through controlled Docker container crashes or simulated network partitions. Such tests are essential to verify the middleware's robustness and fault tolerance under realistic failure scenarios.
+In addition, techniques such as fault injection and failure simulation are particularly valuable when testing distributed middleware. These methods deliberately introduce faults, such as process termination, artificial network loss, or resource exhaustion, to observe how the system behaves under edge conditions. In containerized environments, this can be achieved through controlled Docker container crashes or simulated network partitions. Such tests are essential to verify the middleware's robustness and fault tolerance under realistic failure scenarios.
+
 
 \subsubsection{Comparison of Middleware Testing}
 
-To evaluate the practical suitability of different middleware frameworks for testing, it is important to compare their support for common testing methods and tools. While all frameworks follow a publish-subscribe architecture and support integration testing in some form, their features differ significantly in terms of system-level support, real-time validation, simulation tools, and fault injection capabilities \cite{gorton2006software, burns2009real}.
+To understand how different middleware frameworks are currently tested, it is important to compare their support for common testing methods and tools. While all frameworks follow a publish-subscribe architecture and support integration testing in some form, their features differ significantly in terms of system-level support, real-time validation, simulation tools, and fault injection capabilities \cite{gorton2006software, burns2009real}.
 
 \vspace{1em}
-The following list summarizes the most relevant testing aspects and how they are supported by ROS, DDS, and eCAL:
+The extent and structure of testing differ significantly between the frameworks. The following list summarizes the most relevant testing aspects and how they are supported by ROS, DDS, and eCAL:
 
 \begin{itemize}
 	\item \textbf{Integration Testing}
@@ -407,6 +408,6 @@ The following list summarizes the most relevant testing aspects and how they are
 
 \vspace{0.5em}
 
-This comparison shows that ROS provides strong tooling for development and simulation-based testing, while DDS offers the most comprehensive support for Quality-of-Service validation. In contrast, eCAL does not natively support automated system-level testing or fault injection \cite{ecal_official_docs}. However, this thesis introduces a new testing approach later based on Robot Framework and containerized environments to address this gap \cite{RobotFrameworkDocs}.
+This comparison shows that ROS provides strong tooling for development and simulation-based testing, while DDS offers the most comprehensive support for Quality-of-Service validation. In contrast, eCAL does not natively support automated system-level testing or fault injection \cite{ecal_official_docs}. These differences indicate that some frameworks currently lack reusable and automated testing strategies, especially at the system level. Addressing these gaps is one of the goals of this thesis.
 
 

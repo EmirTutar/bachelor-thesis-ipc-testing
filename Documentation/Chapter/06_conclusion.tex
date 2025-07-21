@@ -28,23 +28,42 @@ More generally, the solution demonstrates how integration testing can be applied
 \vspace{1em}
 Thanks to the modular design and use of standard tools like Docker and Robot Framework, the system supports full automation and integration into CI/CD pipelines. The test execution is reproducible, and all steps from building containers to validating logs are controlled by reusable Python and shell scripts.
 
-\vspace{1em}
 \subsection*{Limitations and Outlook}
 
-While the current test system provides a solid foundation for automated IPC testing, it also has limitations. All tests are based on predefined containers and fixed communication patterns. Dynamic test generation, large-scale parallel setups, or real-time performance measurements were not within the scope of this work.
+While the test system provides a good foundation for automated IPC testing, there are still some limitations and open areas for improvement.
 
 \vspace{1em}
-In addition, the tests are currently focused on the functional level. Topics such as security, data consistency under load, or long-term stability have not yet been addressed and could be explored in future work.
+One limitation is that \textbf{debugging "failed test cases"} can still be difficult. Even though logs and exit codes are collected from each container, it can take time to understand what went wrong, especially in tests with many components. A possible improvement would be to use a \textbf{central log format or viewer} to better follow what happened during the test.
 
 \vspace{1em}
-The general concept, however, can be extended beyond eCAL. The modular test infrastructure and test execution logic are applicable to other IPC systems, as long as the communication logic is containerizable and script-controlled. This makes the presented approach a reusable blueprint for testing in other distributed environments.
+Also, the tests are currently based on \textbf{static scripts}. Each scenario is defined manually in a Robot Framework file. This works well for a small number of tests, but it becomes harder to maintain when the number of test cases grows. A data-driven approach or test generation with parameters could help reduce duplication.
+
+\vspace{1em}
+The system also does not measure \textbf{performance aspects}, such as latency, timing jitter, or throughput. These are important in real-time systems but were outside the scope of this work. In the future, performance monitoring could be added to measure the timing behavior of messages.
+
+\vspace{1em}
+Some actions, such as disconnecting containers from the network, are currently controlled by fixed sleep times. This can work, but it is \textbf{sensitive to timing issues}. A more robust way would be to wait for a specific condition or use health checks before continuing with the test.
+
+\vspace{1em}
+Even with these limitations, the test setup is flexible and can be extended. The system is not limited to eCAL and could be adapted to other IPC frameworks. Future work could explore:
+
+\begin{itemize}
+	\item Running tests with more components in parallel
+	\item Testing communication under heavy load or high message rates
+	\item Security-related tests (e.g., unauthorized access, message spoofing)
+\end{itemize}
+
+\vspace{1em}
+In summary, the current system works well for functional testing and basic fault handling. With further development, it could support more advanced use cases such as performance testing and large-scale distributed validation.
+
 
 \vspace{1em}
 \subsection*{Final Remarks}
 
 \vspace{1em}
-This thesis has shown how integration testing of IPC middleware can be made more systematic, scalable, and reusable. The developed concept not only supports testing of eCAL, but also lays the foundation for future testing strategies in distributed systems.
+This thesis has shown how integration testing of IPC middleware can be made more systematic, scalable, and reusable. The developed concept not only supports testing of eCAL but also lays the foundation for future testing strategies in distributed systems.
 
 \vspace{1em}
 From a personal perspective, working on this topic has deepened the understanding of software testing, containerization, and communication frameworks. It also highlighted the importance of test automation in modern development workflows and showed how infrastructure and tooling choices can strongly influence the maintainability of complex systems.
 
+\clearpage
