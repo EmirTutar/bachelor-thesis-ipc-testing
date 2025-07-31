@@ -2,7 +2,7 @@
 
 ## Get the PDF - Version
 Latest Version of the Bachelor Thesis:
--->📥 Download [Bachelor_thesis.pdf](https://github.com/EmirTutar/bachelor-thesis-ipc-testing/releases/latest/download/Bachelor_thesis.pdf)
+-->📥 Download [Bachelor_thesis.pdf](https://github.com/EmirTutar/bachelor-thesis-ipc-testing/releases/latest/download/bachelor-thesis-ipc-testing.pdf)
 
 ## Author
 **Emircan Tutar**  
